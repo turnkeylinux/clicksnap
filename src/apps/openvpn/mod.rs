@@ -1,7 +1,6 @@
 use std::env;
 use thirtyfour::prelude::*;
 use async_trait::async_trait;
-use url::ParseError;
 use crate::{Runner, State, Action};
 
 pub struct OpenVPNRunner {}
@@ -13,8 +12,6 @@ impl Runner for OpenVPNRunner {
             Action::Test => {
                 st.wd.goto(st.url.as_str()).await?;
                 st.wd.screenshot(&st.ssp.join("screenshot-tklwebcp.png")).await?;
-                let mut u = st.url.clone();
-                u.set_port(Some(12322)).map_err(|_| ParseError::InvalidPort)?; // FIXME?
                 if let Ok(uu) = env::var("TKL_OPENVPN_PROFILE_URL") {
                     // get from envvar
                     st.wd.goto(uu.as_str()).await?;
