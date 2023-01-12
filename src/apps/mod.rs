@@ -10,6 +10,7 @@ mod core;
 mod lamp;
 mod openvpn;
 mod wordpress;
+mod nodejs;
 
 pub struct State<'a> {
     pub wd:  WebDriver,
@@ -32,6 +33,7 @@ pub enum App {
     Lamp,
     OpenVPN,
     WordPress,
+    NodeJS,
 }
 
 #[async_trait]
@@ -45,5 +47,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(lamp::LampRunner{}),
         Box::new(openvpn::OpenVPNRunner{}),
         Box::new(wordpress::WordPressRunner{}),
+        Box::new(nodejs::NodeJSRunner{}),
     ]
 );
