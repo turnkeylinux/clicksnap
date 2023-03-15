@@ -1,5 +1,8 @@
 use url::Url;
-use std::path::Path;
+use std::{
+    path::Path,
+    collections::HashMap
+};
 use strum::EnumCount;
 use once_cell::sync::Lazy;
 use thirtyfour::prelude::*;
@@ -17,6 +20,7 @@ pub struct State<'a> {
     pub act: Action,
     pub url: Url,
     pub ssp: &'a Path,
+    pub env: HashMap<&'a str, String>
 }
 
 #[derive(EnumString)]

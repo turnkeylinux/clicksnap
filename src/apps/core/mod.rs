@@ -20,7 +20,7 @@ impl Runner for CoreRunner {
                 u.set_port(Some(12321)).map_err(|_| ParseError::InvalidPort)?; // FIXME?
                 st.wd.goto(u.as_str()).await?;
                 (st.wd.find(By::Name("user")).await?).send_keys("root").await?;
-                (st.wd.find(By::Name("pass")).await?).send_keys("turnkey").await?;
+                (st.wd.find(By::Name("pass")).await?).send_keys(&st.env["ROOT_PASS"]).await?;
                 st.wd.screenshot(&st.ssp.join("screenshot-webmin-login.png")).await?;
                 // webmin dashboard
                 let submit = st.wd.find(By::Css("button[type='submit']")).await?;
