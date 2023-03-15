@@ -17,7 +17,7 @@ impl Runner for LampRunner {
                 u.set_port(Some(12322)).map_err(|_| ParseError::InvalidPort)?; // FIXME?
                 st.wd.goto(u.as_str()).await?;
                 (st.wd.find(By::Name("auth[username]")).await?).send_keys("adminer").await?;
-                (st.wd.find(By::Name("auth[password]")).await?).send_keys("turnkey").await?;
+                (st.wd.find(By::Name("auth[password]")).await?).send_keys(&st.env["ROOT_PASS"]).await?;
                 (st.wd.find(By::Css("input[type='submit']")).await?).click().await?;
                 st.wd.screenshot(&st.ssp.join("screenshot-adminer-frontpage.png")).await?;
                 (st.wd.find(By::Id("Db-mysql")).await?).click().await?;

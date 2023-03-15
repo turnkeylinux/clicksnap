@@ -33,7 +33,13 @@ async fn main() -> color_eyre::Result<()> {
         Ok(s) => s,
         Err(_) => "/tmp".to_string(),
     };
-    let st = State{ wd, act, url, ssp: Path::new(&scrpath) };
+
+    let mut env_vars = std::collections::HashMap::default();
+    for var_name in ["ROOT_PASS", "APP_PASS"] {
+        env_vars.insert(var_name, env::var(var_name)?);
+    }
+
+    let st = State{ wd, act, url, ssp: Path::new(&scrpath), env: env_vars };
     match &RUNNERS[..].get(app as usize) {
         Some(t) => match t.exec(&st).await {
                 Ok(()) => {
