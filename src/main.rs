@@ -36,7 +36,11 @@ async fn main() -> color_eyre::Result<()> {
 
     let mut env_vars = std::collections::HashMap::default();
     for var_name in ["ROOT_PASS", "APP_PASS"] {
-        env_vars.insert(var_name, env::var(var_name)?);
+        if let Ok(value) = env::var(var_name) {
+            env_vars.insert(var_name, value);
+        } else {
+            return Err(color_eyre::eyre::eyre!("ENVVAR {} not set!", var_name));
+        }
     }
 
     let st = State{ wd, act, url, ssp: Path::new(&scrpath), env: env_vars };
