@@ -1,8 +1,5 @@
 use url::Url;
-use std::{
-    path::Path,
-    collections::HashMap
-};
+use std::path::Path;
 use strum::EnumCount;
 use once_cell::sync::Lazy;
 use thirtyfour::prelude::*;
@@ -15,12 +12,20 @@ mod openvpn;
 mod wordpress;
 mod nodejs;
 
+pub struct Preseeds {
+    pub root_pass: String,
+    pub db_pass: String,
+    pub app_pass: String,
+    pub app_email: String,
+    pub app_domain: String
+}
+
 pub struct State<'a> {
     pub wd:  WebDriver,
     pub act: Action,
     pub url: Url,
     pub ssp: &'a Path,
-    pub env: HashMap<&'a str, String>
+    pub pse: Preseeds
 }
 
 #[derive(EnumString)]

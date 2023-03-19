@@ -34,16 +34,15 @@ async fn main() -> color_eyre::Result<()> {
         Err(_) => "/tmp".to_string(),
     };
 
-    let mut env_vars = std::collections::HashMap::default();
-    for var_name in ["ROOT_PASS", "APP_PASS"] {
-        if let Ok(value) = env::var(var_name) {
-            env_vars.insert(var_name, value);
-        } else {
-            return Err(color_eyre::eyre::eyre!("ENVVAR {} not set!", var_name));
-        }
-    }
+    let preseeds = Preseeds{
+        root_pass: env::var("ROOT_PASS").unwrap_or("turnkey".to_owned()),
+        db_pass: env::var("DB_PASS").unwrap_or("turnkey".to_owned()),
+        app_pass: env::var("APP_PASS").unwrap_or("turnkey".to_owned()),
+        app_email: env::var("APP_EMAIL").unwrap_or("admin@example.com".to_owned()),
+        app_domain: env::var("APP_DOMAIN").unwrap_or("example.com".to_owned())
 
-    let st = State{ wd, act, url, ssp: Path::new(&scrpath), env: env_vars };
+    };
+    let st = State{ wd, act, url, ssp: Path::new(&scrpath), pse: preseeds };
     match &RUNNERS[..].get(app as usize) {
         Some(t) => match t.exec(&st).await {
                 Ok(()) => {
