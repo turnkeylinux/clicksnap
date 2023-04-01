@@ -19,6 +19,7 @@ mod nginx_php_fastcgi;
 mod odoo;
 mod asp_net_core;
 mod avideo;
+mod b2evolution;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -69,6 +70,7 @@ pub enum App {
     Odoo,
     AspNetCore,
     Avideo,
+    B2Evolution,
 }
 
 #[async_trait]
@@ -93,5 +95,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(odoo::OdooRunner{}),
         Box::new(asp_net_core::AspNetCoreRunner{}),
         Box::new(avideo::AvideoRunner{}),
+        Box::new(b2evolution::B2EvolutionRunner{}),
     ]
 );
