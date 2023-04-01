@@ -17,6 +17,7 @@ mod fileserver;
 mod owncloud;
 mod nginx_php_fastcgi;
 mod odoo;
+mod asp_net_core;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -57,6 +58,7 @@ pub enum App {
     OwnCloud,
     NginxPHPFastCGI,
     Odoo,
+    AspNetCore,
 }
 
 #[async_trait]
@@ -79,5 +81,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(owncloud::OwnCloudRunner{}),
         Box::new(nginx_php_fastcgi::NginxPHPFastCGIRunner{}),
         Box::new(odoo::OdooRunner{}),
+        Box::new(asp_net_core::AspNetCoreRunner{}),
     ]
 );
