@@ -35,6 +35,14 @@ pub struct State<'a> {
     pub pse: Preseeds
 }
 
+impl State<'_> {
+    async fn wait(&self, sel : By) -> WebDriverResult<WebElement> {
+        let elt = self.wd.query(sel).first().await?;
+        elt.wait_until().displayed().await?;
+        Ok(elt)
+    }
+}
+
 #[derive(EnumString)]
 #[strum(serialize_all = "lowercase")]
 pub enum Action {
