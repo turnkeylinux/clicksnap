@@ -13,6 +13,7 @@ mod wordpress;
 mod nodejs;
 mod rails;
 mod redmine;
+mod fileserver;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -47,6 +48,7 @@ pub enum App {
     NodeJS,
     Rails,
     Redmine,
+    FileServer,
 }
 
 #[async_trait]
@@ -63,5 +65,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(nodejs::NodeJSRunner{}),
         Box::new(rails::RailsRunner{}),
         Box::new(redmine::RedmineRunner{}),
+        Box::new(fileserver::FileServerRunner{}),
     ]
 );
