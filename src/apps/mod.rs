@@ -11,6 +11,7 @@ mod lamp;
 mod openvpn;
 mod wordpress;
 mod nodejs;
+mod rails;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -43,6 +44,7 @@ pub enum App {
     OpenVPN,
     WordPress,
     NodeJS,
+    Rails,
 }
 
 #[async_trait]
@@ -57,5 +59,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(openvpn::OpenVPNRunner{}),
         Box::new(wordpress::WordPressRunner{}),
         Box::new(nodejs::NodeJSRunner{}),
+        Box::new(rails::RailsRunner{}),
     ]
 );
