@@ -14,6 +14,7 @@ mod nodejs;
 mod rails;
 mod redmine;
 mod fileserver;
+mod owncloud;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -51,6 +52,7 @@ pub enum App {
     Rails,
     Redmine,
     FileServer,
+    OwnCloud,
 }
 
 #[async_trait]
@@ -70,5 +72,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(rails::RailsRunner{}),
         Box::new(redmine::RedmineRunner{}),
         Box::new(fileserver::FileServerRunner{}),
+        Box::new(owncloud::OwnCloudRunner{}),
     ]
 );
