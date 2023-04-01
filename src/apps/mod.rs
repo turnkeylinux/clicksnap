@@ -16,6 +16,7 @@ mod redmine;
 mod fileserver;
 mod owncloud;
 mod nginx_php_fastcgi;
+mod odoo;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -55,6 +56,7 @@ pub enum App {
     FileServer,
     OwnCloud,
     NginxPHPFastCGI,
+    Odoo,
 }
 
 #[async_trait]
@@ -76,5 +78,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(fileserver::FileServerRunner{}),
         Box::new(owncloud::OwnCloudRunner{}),
         Box::new(nginx_php_fastcgi::NginxPHPFastCGIRunner{}),
+        Box::new(odoo::OdooRunner{}),
     ]
 );
