@@ -17,12 +17,12 @@ impl Runner for CouchDBRunner {
                 st.wait(By::Id("username")).await?.send_keys("admin").await?;
                 st.wait(By::Id("password")).await?.send_keys(&st.pse.app_pass).await?;
                 st.wait(By::Id("submit")).await?.click().await?;
-                std::thread::sleep(std::time::Duration::from_millis(1000));
+                st.sleep(1000).await;
                 // dashboard
                 st.wd.screenshot(&st.ssp.join("screenshot-fauxton.png")).await?;
                 st.wait(By::XPath("//a[text() = '_users']")).await?.click().await?;
                 st.wait(By::XPath("//td[@title = '_design/_auth']")).await?.click().await?;
-                std::thread::sleep(std::time::Duration::from_millis(1000));
+                st.sleep(1000).await;
                 st.wd.screenshot(&st.ssp.join("screenshot-fauxton-db.png")).await?;
                 Ok(())
             },

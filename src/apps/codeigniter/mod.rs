@@ -19,7 +19,7 @@ impl Runner for CodeIgniterRunner {
                 st.wait(By::XPath("//a[text() = 'User Guide']")).await?.click().await?;
                 // switch to the newly created tab! the link is target=_blank
                 st.wd.switch_to_window(st.wd.windows().await?[1].clone()).await?;
-                std::thread::sleep(std::time::Duration::from_millis(1000));
+                st.sleep(1000).await;
                 st.wd.screenshot(&st.ssp.join("screenshot-user-guide.png")).await?;
                 Ok(())
             },

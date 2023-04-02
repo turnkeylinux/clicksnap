@@ -1,4 +1,3 @@
-use core::time;
 use thirtyfour::prelude::*;
 use async_trait::async_trait;
 use crate::{Runner, State, Action};
@@ -19,17 +18,17 @@ impl Runner for AvideoRunner {
                 st.wait(By::Id("inputUser")).await?.send_keys("admin").await?;
                 st.wait(By::Id("inputPassword")).await?.send_keys(&st.pse.app_pass).await?;
                 // NOTE this is bad but it doesn't work otherwise
-                std::thread::sleep(time::Duration::from_millis(1000));
+                st.sleep(1000).await;
                 st.wd.screenshot(&st.ssp.join("screenshot-login.png")).await?;
                 st.wait(By::Id("mainButton")).await?.click().await?;
                 // NOTE this is bad but it doesn't work otherwise
-                std::thread::sleep(time::Duration::from_millis(500));
+                st.sleep(500).await;
                 st.wait(By::Css("button[id=buttonMenu]")).await?.click().await?;
                 // NOTE all of this is pretty bad too...
                 let e = st.wait(By::XPath(".//a[contains(@onclick, 'siteConfigurations')]")).await?;
                 e.scroll_into_view().await?;
                 e.click().await?;
-                std::thread::sleep(time::Duration::from_millis(2000));
+                st.sleep(2000).await;
                 st.wd.screenshot(&st.ssp.join("screenshot-settings.png")).await?;
                 Ok(())
             },
