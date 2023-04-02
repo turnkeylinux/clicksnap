@@ -24,6 +24,7 @@ mod bagisto;
 mod bugzilla;
 mod cakephp;
 mod canvas;
+mod codeigniter;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -79,6 +80,7 @@ pub enum App {
     Bugzilla,
     CakePHP,
     Canvas,
+    CodeIgniter,
 }
 
 #[async_trait]
@@ -108,5 +110,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(bugzilla::BugzillaRunner{}),
         Box::new(cakephp::CakePHPRunner{}),
         Box::new(canvas::CanvasRunner{}),
+        Box::new(codeigniter::CodeIgniterRunner{}),
     ]
 );
