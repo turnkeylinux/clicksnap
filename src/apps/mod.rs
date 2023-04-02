@@ -22,6 +22,7 @@ mod avideo;
 mod b2evolution;
 mod bagisto;
 mod bugzilla;
+mod cakephp;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -75,6 +76,7 @@ pub enum App {
     B2Evolution,
     Bagisto,
     Bugzilla,
+    CakePHP,
 }
 
 #[async_trait]
@@ -102,5 +104,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(b2evolution::B2EvolutionRunner{}),
         Box::new(bagisto::BagistoRunner{}),
         Box::new(bugzilla::BugzillaRunner{}),
+        Box::new(cakephp::CakePHPRunner{}),
     ]
 );
