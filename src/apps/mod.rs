@@ -50,6 +50,10 @@ impl State<'_> {
         elt.wait_until().displayed().await?;
         Ok(elt)
     }
+
+    async fn sleep(&self, m : u64) -> () {
+        thirtyfour::support::sleep(std::time::Duration::from_millis(m)).await
+    }
 }
 
 #[derive(EnumString)]
