@@ -1,7 +1,7 @@
+use std::{env, path::PathBuf};
+use thirtyfour::prelude::*;
 use tokio;
 use url::Url;
-use thirtyfour::prelude::*;
-use std::{path::Path, env};
 
 mod apps;
 use apps::*;
@@ -11,15 +11,17 @@ async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
 
     // parse args
-    let args : Vec<String> = env::args().collect();
+    let args: Vec<String> = env::args().collect();
     if args.len() != 4 {
-        return Err(color_eyre::Report::msg("usage: tkl-webtest <action: test|install> <appliance name> <root URL>"))
+        return Err(color_eyre::Report::msg(
+            "usage: tkl-webtest <action: test|install> <appliance name> <root URL>",
+        ));
     }
 
     let act = match args[1].as_str() {
         "test" => Action::Test,
         "install" => Action::Install,
-        x => panic!("unknown action: {}", x)
+        x => panic!("unknown action: {}", x),
     };
 
     let app = &args[2];
@@ -38,26 +40,22 @@ async fn main() -> color_eyre::Result<()> {
         Err(_) => "/tmp".to_string(),
     };
 
-    let preseeds = Preseeds{
+    let preseeds = Preseeds {
         root_pass: env::var("ROOT_PASS").unwrap_or("turnkey".to_owned()),
         db_pass: env::var("DB_PASS").unwrap_or("turnkey".to_owned()),
         app_pass: env::var("APP_PASS").unwrap_or("turnkey".to_owned()),
         app_email: env::var("APP_EMAIL").unwrap_or("admin@example.com".to_owned()),
-        app_domain: env::var("APP_DOMAIN").unwrap_or("example.com".to_owned())
-
+        app_domain: env::var("APP_DOMAIN").unwrap_or("example.com".to_owned()),
     };
-    let st = State{ wd, act, url, ssp: Path::new(&scrpath), pse: preseeds };
+    let st = State {
+        wd,
+        act,
+        url,
+        ssp: PathBuf::from(&scrpath),
+        pse: preseeds,
+    };
     match RUNNERS.get(app.as_str()) {
-        Some(t) => match t.exec(&st).await {
-                Ok(()) => {
-                    st.wd.quit().await?;
-                    Ok(())
-                },
-                Err(e) => {
-                    st.wd.quit().await?;
-                    Err(color_eyre::Report::new(e))
-                },
-        }
+        Some(t) => t.exec(st).await.map_err(color_eyre::Report::new),
         None => Err(color_eyre::Report::msg(format!("Unknown app: {:?}!", app))),
     }
 }
