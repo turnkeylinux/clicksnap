@@ -21,6 +21,7 @@ mod asp_net_core;
 mod avideo;
 mod b2evolution;
 mod bagisto;
+mod bugzilla;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -73,6 +74,7 @@ pub enum App {
     Avideo,
     B2Evolution,
     Bagisto,
+    Bugzilla,
 }
 
 #[async_trait]
@@ -99,5 +101,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(avideo::AvideoRunner{}),
         Box::new(b2evolution::B2EvolutionRunner{}),
         Box::new(bagisto::BagistoRunner{}),
+        Box::new(bugzilla::BugzillaRunner{}),
     ]
 );
