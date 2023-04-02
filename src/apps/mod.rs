@@ -25,6 +25,7 @@ mod bugzilla;
 mod cakephp;
 mod canvas;
 mod codeigniter;
+mod concrete_cms;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -81,6 +82,7 @@ pub enum App {
     CakePHP,
     Canvas,
     CodeIgniter,
+    ConcreteCMS,
 }
 
 #[async_trait]
@@ -111,5 +113,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(cakephp::CakePHPRunner{}),
         Box::new(canvas::CanvasRunner{}),
         Box::new(codeigniter::CodeIgniterRunner{}),
+        Box::new(concrete_cms::ConcreteCMSRunner{}),
     ]
 );
