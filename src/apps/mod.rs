@@ -1,10 +1,9 @@
 use url::Url;
 use std::path::Path;
-use strum::EnumCount;
+use std::collections::HashMap;
 use once_cell::sync::Lazy;
 use thirtyfour::prelude::*;
 use async_trait::async_trait;
-use strum_macros::{EnumString, EnumCount as EnumCountMacro};
 
 mod core;
 mod lamp;
@@ -56,39 +55,9 @@ impl State<'_> {
     }
 }
 
-#[derive(EnumString)]
-#[strum(serialize_all = "lowercase")]
 pub enum Action {
     Test,
     Install,
-}
-
-#[derive(Clone, Copy, Debug, EnumString, EnumCountMacro)]
-#[strum(serialize_all = "lowercase")]
-pub enum App {
-    Core,
-    Lamp,
-    OpenVPN,
-    WordPress,
-    NodeJS,
-    MySQL,
-    Lapp,
-    Rails,
-    Redmine,
-    FileServer,
-    OwnCloud,
-    NginxPHPFastCGI,
-    Odoo,
-    AspNetCore,
-    Avideo,
-    B2Evolution,
-    Bagisto,
-    Bugzilla,
-    CakePHP,
-    Canvas,
-    CodeIgniter,
-    ConcreteCMS,
-    CouchDB,
 }
 
 #[async_trait]
@@ -96,30 +65,30 @@ pub trait Runner {
     async fn exec(&self, _ : &State) -> WebDriverResult<()>;
 }
 
-pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::new(||
-    [
-        Box::new(core::CoreRunner{}),
-        Box::new(lamp::LampRunner{}),
-        Box::new(openvpn::OpenVPNRunner{}),
-        Box::new(wordpress::WordPressRunner{}),
-        Box::new(nodejs::NodeJSRunner{}),
-        Box::new(lamp::LampRunner{}),
-        Box::new(lamp::LampRunner{}),
-        Box::new(rails::RailsRunner{}),
-        Box::new(redmine::RedmineRunner{}),
-        Box::new(fileserver::FileServerRunner{}),
-        Box::new(owncloud::OwnCloudRunner{}),
-        Box::new(nginx_php_fastcgi::NginxPHPFastCGIRunner{}),
-        Box::new(odoo::OdooRunner{}),
-        Box::new(asp_net_core::AspNetCoreRunner{}),
-        Box::new(avideo::AvideoRunner{}),
-        Box::new(b2evolution::B2EvolutionRunner{}),
-        Box::new(bagisto::BagistoRunner{}),
-        Box::new(bugzilla::BugzillaRunner{}),
-        Box::new(cakephp::CakePHPRunner{}),
-        Box::new(canvas::CanvasRunner{}),
-        Box::new(codeigniter::CodeIgniterRunner{}),
-        Box::new(concrete_cms::ConcreteCMSRunner{}),
-        Box::new(couchdb::CouchDBRunner{}),
-    ]
-);
+pub static RUNNERS: Lazy<HashMap<&str, Box<dyn Runner + Send + Sync>>> = Lazy::new(|| {
+    let mut h : HashMap<&str, Box<dyn Runner + Send + Sync>> = HashMap::new();
+    h.insert("core", Box::new(core::CoreRunner{}));
+    h.insert("lamp", Box::new(lamp::LampRunner{}));
+    h.insert("openvpn", Box::new(openvpn::OpenVPNRunner{}));
+    h.insert("wordpress", Box::new(wordpress::WordPressRunner{}));
+    h.insert("nodejs", Box::new(nodejs::NodeJSRunner{}));
+    h.insert("mysql", Box::new(lamp::LampRunner{}));
+    h.insert("lapp", Box::new(lamp::LampRunner{}));
+    h.insert("rails", Box::new(rails::RailsRunner{}));
+    h.insert("redmine", Box::new(redmine::RedmineRunner{}));
+    h.insert("fileserver", Box::new(fileserver::FileServerRunner{}));
+    h.insert("owncloud", Box::new(owncloud::OwnCloudRunner{}));
+    h.insert("nginx-php-fastcgi", Box::new(nginx_php_fastcgi::NginxPHPFastCGIRunner{}));
+    h.insert("odoo", Box::new(odoo::OdooRunner{}));
+    h.insert("asp-net-core", Box::new(asp_net_core::AspNetCoreRunner{}));
+    h.insert("avideo", Box::new(avideo::AvideoRunner{}));
+    h.insert("b2evolution", Box::new(b2evolution::B2EvolutionRunner{}));
+    h.insert("bagisto", Box::new(bagisto::BagistoRunner{}));
+    h.insert("bugzilla", Box::new(bugzilla::BugzillaRunner{}));
+    h.insert("cakephp", Box::new(cakephp::CakePHPRunner{}));
+    h.insert("canvas", Box::new(canvas::CanvasRunner{}));
+    h.insert("codeigniter", Box::new(codeigniter::CodeIgniterRunner{}));
+    h.insert("concrete-cms", Box::new(concrete_cms::ConcreteCMSRunner{}));
+    h.insert("couchdb", Box::new(couchdb::CouchDBRunner{}));
+    h
+});

@@ -1,8 +1,7 @@
 use tokio;
 use url::Url;
-use strum::EnumCount;
 use thirtyfour::prelude::*;
-use std::{path::Path, env, str::FromStr};
+use std::{path::Path, env};
 
 mod apps;
 use apps::*;
@@ -17,8 +16,13 @@ async fn main() -> color_eyre::Result<()> {
         return Err(color_eyre::Report::msg("usage: tkl-webtest <action: test|install> <appliance name> <root URL>"))
     }
 
-    let act = Action::from_str(&args[1])?;
-    let app = App::from_str(&args[2])?;
+    let act = match args[1].as_str() {
+        "test" => Action::Test,
+        "install" => Action::Install,
+        x => panic!("unknown action: {}", x)
+    };
+
+    let app = &args[2];
     let url = Url::parse(&args[3])?;
 
     let mut caps = DesiredCapabilities::chrome();
@@ -43,7 +47,7 @@ async fn main() -> color_eyre::Result<()> {
 
     };
     let st = State{ wd, act, url, ssp: Path::new(&scrpath), pse: preseeds };
-    match &RUNNERS[..].get(app as usize) {
+    match RUNNERS.get(app.as_str()) {
         Some(t) => match t.exec(&st).await {
                 Ok(()) => {
                     st.wd.quit().await?;
@@ -54,7 +58,6 @@ async fn main() -> color_eyre::Result<()> {
                     Err(color_eyre::Report::new(e))
                 },
         }
-        None if (app as usize > App::COUNT) => Err(color_eyre::Report::msg(format!("Outside allowed index: app {:?} = {:?}!", app, app as usize))),
         None => Err(color_eyre::Report::msg(format!("Unknown app: {:?}!", app))),
     }
 }
