@@ -20,6 +20,7 @@ mod odoo;
 mod asp_net_core;
 mod avideo;
 mod b2evolution;
+mod bagisto;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -71,6 +72,7 @@ pub enum App {
     AspNetCore,
     Avideo,
     B2Evolution,
+    Bagisto,
 }
 
 #[async_trait]
@@ -96,5 +98,6 @@ pub static RUNNERS: Lazy<[Box<dyn Runner + Send + Sync>; App::COUNT]> = Lazy::ne
         Box::new(asp_net_core::AspNetCoreRunner{}),
         Box::new(avideo::AvideoRunner{}),
         Box::new(b2evolution::B2EvolutionRunner{}),
+        Box::new(bagisto::BagistoRunner{}),
     ]
 );
