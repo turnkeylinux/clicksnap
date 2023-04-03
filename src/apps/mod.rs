@@ -28,6 +28,7 @@ mod owncloud;
 mod rails;
 mod redmine;
 mod wordpress;
+mod gitea;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -111,5 +112,6 @@ pub static RUNNERS: Lazy<BoxAsyncFnMap> = Lazy::new(|| {
     h.insert("rails", Box::new(rails::exec));
     h.insert("redmine", Box::new(redmine::exec));
     h.insert("wordpress", Box::new(wordpress::exec));
+    h.insert("gitea", Box::new(gitea::exec));
     h
 });
