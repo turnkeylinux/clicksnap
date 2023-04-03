@@ -17,6 +17,7 @@ mod concrete_cms;
 mod core;
 mod couchdb;
 mod django;
+mod dokuwiki;
 mod fileserver;
 mod lamp;
 mod nginx_php_fastcgi;
@@ -97,6 +98,7 @@ pub static RUNNERS: Lazy<BoxAsyncFnMap> = Lazy::new(|| {
     h.insert("core", Box::new(core::exec));
     h.insert("couchdb", Box::new(couchdb::exec));
     h.insert("django", Box::new(django::exec));
+    h.insert("dokuwiki", Box::new(dokuwiki::exec));
     h.insert("fileserver", Box::new(fileserver::exec));
     h.insert("lamp", Box::new(lamp::exec));
     h.insert("lapp", Box::new(lamp::exec));
