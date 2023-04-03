@@ -84,19 +84,6 @@ type BoxAsyncFnMap = HashMap<&'static str, BoxAsyncFn>;
 
 pub static RUNNERS: Lazy<BoxAsyncFnMap> = Lazy::new(|| {
     let mut h: BoxAsyncFnMap = HashMap::new();
-    h.insert("core", Box::new(core::exec));
-    h.insert("lamp", Box::new(lamp::exec));
-    h.insert("openvpn", Box::new(openvpn::exec));
-    h.insert("wordpress", Box::new(wordpress::exec));
-    h.insert("nodejs", Box::new(nodejs::exec));
-    h.insert("mysql", Box::new(lamp::exec));
-    h.insert("lapp", Box::new(lamp::exec));
-    h.insert("rails", Box::new(rails::exec));
-    h.insert("redmine", Box::new(redmine::exec));
-    h.insert("fileserver", Box::new(fileserver::exec));
-    h.insert("owncloud", Box::new(owncloud::exec));
-    h.insert("nginx-php-fastcgi", Box::new(nginx_php_fastcgi::exec));
-    h.insert("odoo", Box::new(odoo::exec));
     h.insert("asp-net-core", Box::new(asp_net_core::exec));
     h.insert("avideo", Box::new(avideo::exec));
     h.insert("b2evolution", Box::new(b2evolution::exec));
@@ -106,6 +93,19 @@ pub static RUNNERS: Lazy<BoxAsyncFnMap> = Lazy::new(|| {
     h.insert("canvas", Box::new(canvas::exec));
     h.insert("codeigniter", Box::new(codeigniter::exec));
     h.insert("concrete-cms", Box::new(concrete_cms::exec));
+    h.insert("core", Box::new(core::exec));
     h.insert("couchdb", Box::new(couchdb::exec));
+    h.insert("fileserver", Box::new(fileserver::exec));
+    h.insert("lamp", Box::new(lamp::exec));
+    h.insert("lapp", Box::new(lamp::exec));
+    h.insert("mysql", Box::new(lamp::exec));
+    h.insert("nginx-php-fastcgi", Box::new(nginx_php_fastcgi::exec));
+    h.insert("nodejs", Box::new(nodejs::exec));
+    h.insert("odoo", Box::new(odoo::exec));
+    h.insert("openvpn", Box::new(openvpn::exec));
+    h.insert("owncloud", Box::new(owncloud::exec));
+    h.insert("rails", Box::new(rails::exec));
+    h.insert("redmine", Box::new(redmine::exec));
+    h.insert("wordpress", Box::new(wordpress::exec));
     h
 });
