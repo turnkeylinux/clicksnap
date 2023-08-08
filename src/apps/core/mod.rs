@@ -6,17 +6,6 @@ pub async fn exec(st: State) -> WebDriverResult<()> {
     match &st.act {
         Action::Test => {
             let mut u = st.url.clone();
-            // shellinabox
-            u.set_port(Some(12320))
-                .map_err(|_| ParseError::InvalidPort)?; // FIXME?
-            st.wd.goto(u.as_str()).await?;
-            (st.wd.query(By::Id("console")).first().await?)
-                .wait_until()
-                .displayed()
-                .await?;
-            st.wd
-                .screenshot(&st.ssp.join("screenshot-siab.png"))
-                .await?;
             // webmin login
             u.set_port(Some(12321))
                 .map_err(|_| ParseError::InvalidPort)?; // FIXME?
