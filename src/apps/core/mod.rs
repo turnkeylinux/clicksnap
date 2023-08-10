@@ -39,6 +39,20 @@ pub async fn exec(st: State) -> WebDriverResult<()> {
             st.wd
                 .screenshot(&st.ssp.join("screenshot-webmin-dashboard.png"))
                 .await?;
+            // webmin terminal
+            let submit = st.wd.find(By::Css("li[aria-label='Command shell']")).await?;
+            submit.click().await?;
+            (st.wd.query(By::Css("div[class='-shell-port- opened']")).first().await?)
+                .wait_until()
+                .displayed()
+                .await?;
+            (st.wd.find(By::Css("input[type='text']")).await?)
+                .send_keys("apt-get update\n")
+                .await?;
+            st.sleep(3000).await; // wait for some output
+            st.wd
+                .screenshot(&st.ssp.join("screenshot-webmin-terminal.png"))
+                .await?;
             Ok(())
         }
         Action::Install => {
