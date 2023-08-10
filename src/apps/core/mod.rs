@@ -19,10 +19,20 @@ pub async fn exec(st: State) -> WebDriverResult<()> {
             st.wd
                 .screenshot(&st.ssp.join("screenshot-webmin-login.png"))
                 .await?;
-            // webmin dashboard
+            // webmin landing page (tklbam)
             let submit = st.wd.find(By::Css("button[type='submit']")).await?;
             submit.click().await?;
             (st.wd.query(By::Id("headln2c")).first().await?)
+                .wait_until()
+                .displayed()
+                .await?;
+            st.wd
+                .screenshot(&st.ssp.join("screenshot-webmin-landing-tklbam.png"))
+                .await?;
+            // webmin dashboard
+            let submit = st.wd.find(By::Css("label[for='open_dashboard']")).await?;
+            submit.click().await?;
+            (st.wd.query(By::Css("g[class='ct-labels']")).first().await?)
                 .wait_until()
                 .displayed()
                 .await?;
