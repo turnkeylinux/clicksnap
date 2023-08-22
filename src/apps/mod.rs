@@ -29,6 +29,9 @@ mod rails;
 mod redmine;
 mod wordpress;
 mod gitea;
+mod drupal7;
+mod drupal10;
+mod silverstripe;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -113,5 +116,8 @@ pub static RUNNERS: Lazy<BoxAsyncFnMap> = Lazy::new(|| {
     h.insert("redmine", Box::new(redmine::exec));
     h.insert("wordpress", Box::new(wordpress::exec));
     h.insert("gitea", Box::new(gitea::exec));
+    h.insert("drupal7", Box::new(drupal7::exec));
+    h.insert("drupal10", Box::new(drupal10::exec));
+    h.insert("silverstripe", Box::new(silverstripe::exec));
     h
 });
