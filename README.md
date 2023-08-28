@@ -16,16 +16,46 @@ Expected result: success or failure based on whether the pages required for the 
 
 Expects Selenium Webdriver to be listening somewhere accessible (default is `localhost:4444`, can be overridden by setting `TKL_WEBDRIVER_URL`).
 
-An easy way to get Selenium up and running is:
-
-```
-docker run -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:4.7.2-20221219
-```
-
 To see what is happening in real time and interact with the browser manually, use noVNC at `localhost:7900` (password `secret`).
 
 To run appliances in Docker alongside Selenium for quick setup, please refer to the repo for [tkldev-docker](https://github.com/turnkeylinux/tkldev-docker).
 
 ## Tips and tricks
 
-Using the `core` testing scenario on any appliance will test and take screenshots of Shellinabox and Webmin.
+Using the `core` testing scenario on any appliance will test and take screenshots of Webmin.
+
+## Setup resources
+
+Install tools (to install on TKLDev/Debian)
+
+Rust: https://www.rust-lang.org/tools/install
+
+Docker: https://docs.docker.com/engine/install/debian/
+
+Selenium Webdriver:
+
+```
+docker run -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:4.7.2-20221219
+```
+
+noVNC:
+
+```
+apt install novnc
+```
+Then from your local browser, browse to:
+
+```
+http://xxx.xxx.xxx.xxx:7900/vnc.html?host=yyy.yyy.yyy.yyy&port=7900
+```
+Where:
+    - `xxx.xxx.xxx.xxx` is the remote TKLDev IP
+    - `yyy.yyy.yyy.yyy` is the LAN IP of the Selenium container (setup as per above)
+    - above IPs can be the same (if they are running on the same host)
+    - `7900` is the default port and should not need adjustment
+
+E.g. I am running Selenium (via Docker) on my TKLDev (ip: 192.168.1.157), which also has noVNC installed. To connect:
+
+```
+http://192.168.1.157:7900/vnc.html?host=192.168.1.157&port=7900
+```

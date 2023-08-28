@@ -6,17 +6,6 @@ pub async fn exec(st: State) -> WebDriverResult<()> {
     match &st.act {
         Action::Test => {
             let mut u = st.url.clone();
-            // shellinabox
-            u.set_port(Some(12320))
-                .map_err(|_| ParseError::InvalidPort)?; // FIXME?
-            st.wd.goto(u.as_str()).await?;
-            (st.wd.query(By::Id("console")).first().await?)
-                .wait_until()
-                .displayed()
-                .await?;
-            st.wd
-                .screenshot(&st.ssp.join("screenshot-siab.png"))
-                .await?;
             // webmin login
             u.set_port(Some(12321))
                 .map_err(|_| ParseError::InvalidPort)?; // FIXME?
@@ -30,7 +19,7 @@ pub async fn exec(st: State) -> WebDriverResult<()> {
             st.wd
                 .screenshot(&st.ssp.join("screenshot-webmin-login.png"))
                 .await?;
-            // webmin dashboard
+            // webmin landing page (tklbam)
             let submit = st.wd.find(By::Css("button[type='submit']")).await?;
             submit.click().await?;
             (st.wd.query(By::Id("headln2c")).first().await?)
@@ -38,7 +27,31 @@ pub async fn exec(st: State) -> WebDriverResult<()> {
                 .displayed()
                 .await?;
             st.wd
+                .screenshot(&st.ssp.join("screenshot-webmin-landing-tklbam.png"))
+                .await?;
+            // webmin dashboard
+            let submit = st.wd.find(By::Css("label[for='open_dashboard']")).await?;
+            submit.click().await?;
+            (st.wd.query(By::Css("g[class='ct-labels']")).first().await?)
+                .wait_until()
+                .displayed()
+                .await?;
+            st.wd
                 .screenshot(&st.ssp.join("screenshot-webmin-dashboard.png"))
+                .await?;
+            // webmin terminal
+            let submit = st.wd.find(By::Css("li[aria-label='Command shell']")).await?;
+            submit.click().await?;
+            (st.wd.query(By::Css("div[class='-shell-port- opened']")).first().await?)
+                .wait_until()
+                .displayed()
+                .await?;
+            (st.wd.find(By::Css("input[type='text']")).await?)
+                .send_keys("apt-get update\n")
+                .await?;
+            st.sleep(3000).await; // wait for some output
+            st.wd
+                .screenshot(&st.ssp.join("screenshot-webmin-terminal.png"))
                 .await?;
             Ok(())
         }
