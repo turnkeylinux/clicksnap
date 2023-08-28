@@ -47,6 +47,7 @@ async fn main() -> color_eyre::Result<()> {
         app_email: env::var("APP_EMAIL").unwrap_or("admin@example.com".to_owned()),
         app_domain: env::var("APP_DOMAIN").unwrap_or("example.com".to_owned()),
     };
+
     let st = State {
         wd,
         act,
