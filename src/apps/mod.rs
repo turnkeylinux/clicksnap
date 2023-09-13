@@ -25,6 +25,7 @@ mod nodejs;
 mod odoo;
 mod openvpn;
 mod owncloud;
+mod nextcloud;
 mod rails;
 mod redmine;
 mod wordpress;
@@ -32,6 +33,7 @@ mod gitea;
 mod drupal7;
 mod drupal10;
 mod silverstripe;
+mod orangehrm;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -112,6 +114,7 @@ pub static RUNNERS: Lazy<BoxAsyncFnMap> = Lazy::new(|| {
     h.insert("odoo", Box::new(odoo::exec));
     h.insert("openvpn", Box::new(openvpn::exec));
     h.insert("owncloud", Box::new(owncloud::exec));
+    h.insert("nextcloud", Box::new(nextcloud::exec));
     h.insert("rails", Box::new(rails::exec));
     h.insert("redmine", Box::new(redmine::exec));
     h.insert("wordpress", Box::new(wordpress::exec));
@@ -119,5 +122,6 @@ pub static RUNNERS: Lazy<BoxAsyncFnMap> = Lazy::new(|| {
     h.insert("drupal7", Box::new(drupal7::exec));
     h.insert("drupal10", Box::new(drupal10::exec));
     h.insert("silverstripe", Box::new(silverstripe::exec));
+    h.insert("orangehrm", Box::new(orangehrm::exec));
     h
 });
