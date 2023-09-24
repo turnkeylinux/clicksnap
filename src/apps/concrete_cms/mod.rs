@@ -10,28 +10,29 @@ pub async fn exec(st: State) -> WebDriverResult<()> {
                 .screenshot(&st.ssp.join("screenshot-mainpage.png"))
                 .await?;
             // login screen
-            st.wait(By::XPath("//a[text() = 'Log in']"))
-                .await?
-                .click()
-                .await?;
-            st.wait(By::Id("uName")).await?.send_keys("admin").await?;
-            st.wait(By::Id("uPassword"))
-                .await?
-                .send_keys(&*st.pse.app_pass)
-                .await?;
-            st.wait(By::XPath("//button[text() = 'Sign In']"))
-                .await?
-                .click()
-                .await?;
-            // admin dashboard
-            st.wait(By::XPath(
-                "//a[contains(@class, 'ccm-panel-back') and contains(text(), 'Dashboard')]",
-            ))
-            .await?
-            .click()
-            .await?;
+            st.wd.goto(st.url.join("index.php/login")?.as_str()).await?;
+
+            let form = st.wd.form(By::ClassName("concrete-login-form")).await?;
+            form.set_by_name("uName", "admin").await?;
+            form.set_by_name("uPassword", &st.pse.app_pass).await?;
+            form.submit_direct().await?;
+
+            if let Ok(el) = st.wait(By::XPath("//button[text() = 'Skip']")).await {
+                el.click().await?;
+                st.sleep(1000).await;
+                st.wait(By::XPath("//button[text() = 'Got It!']")).await?.click().await?;
+                st.sleep(1000).await;
+            }
+
             st.wd
                 .screenshot(&st.ssp.join("screenshot-admin.png"))
+                .await?;
+
+            // admin dashboard
+            
+            st.wd.goto(st.url.join("index.php/dashboard/system")?.as_str()).await?;
+            st.wd
+                .screenshot(&st.ssp.join("screenshot-admin-dashboard.png"))
                 .await?;
             // themes settings page
             // it doesn't seem possible to click it for some reason...
