@@ -1,53 +1,53 @@
+use crate::Runner;
 use crate::{Action, State};
+use async_trait::async_trait;
 use thirtyfour::prelude::*;
 
-pub async fn exec(st: State) -> WebDriverResult<()> {
-    match &st.act {
-        Action::Test => {
-            st.wd.goto(st.url.as_str()).await?;
+pub struct T();
 
-            st.wd
-                .screenshot(&st.ssp.join("landing.png"))
-                .await?;
+#[async_trait]
+impl Runner for T {
+    async fn exec(&self, st: &State) -> WebDriverResult<()> {
+        match &st.act {
+            Action::Test => {
+                st.wd.goto(st.url.as_str()).await?;
 
-            let form = st.wd.form(By::Id("login-form-16")).await?;
+                st.wd.screenshot(&st.ssp.join("landing.png")).await?;
 
-            form.set_by_name("username", "admin").await?;
-            form.set_by_name("password", &st.pse.app_pass).await?;
-            form.submit().await?;
-            st.sleep(500).await;
+                let form = st.wd.form(By::Id("login-form-16")).await?;
 
-            st.wd
-                .screenshot(&st.ssp.join("login.png"))
-                .await?;
+                form.set_by_name("username", "admin").await?;
+                form.set_by_name("password", &st.pse.app_pass).await?;
+                form.submit().await?;
+                st.sleep(500).await;
 
-            let u = st.url.join("administrator")?;
-            st.wd.goto(u.as_str()).await?;
+                st.wd.screenshot(&st.ssp.join("login.png")).await?;
 
-            st.wd
-                .screenshot(&st.ssp.join("admin-login.png"))
-                .await?;
+                let u = st.url.join("administrator")?;
+                st.wd.goto(u.as_str()).await?;
 
-            (st.wd.find(By::Id("mod-login-username")).await?)
-                .send_keys("admin")
-                .await?;
-            (st.wd.find(By::Id("mod-login-password")).await?)
-                .send_keys(&st.pse.root_pass)
-                .await?;
-            let submit = st.wd.find(By::Css("button[type='submit']")).await?;
-            submit.click().await?;
+                st.wd.screenshot(&st.ssp.join("admin-login.png")).await?;
 
-            st.sleep(1000).await;
+                (st.wd.find(By::Id("mod-login-username")).await?)
+                    .send_keys("admin")
+                    .await?;
+                (st.wd.find(By::Id("mod-login-password")).await?)
+                    .send_keys(&st.pse.root_pass)
+                    .await?;
+                let submit = st.wd.find(By::Css("button[type='submit']")).await?;
+                submit.click().await?;
 
-            st.wd
-                .screenshot(&st.ssp.join("admin-dashboard.png"))
-                .await?;
-            Ok(())
+                st.sleep(1000).await;
 
-        }
-        Action::Install => {
-            // there is nothing to install
-            Ok(())
+                st.wd
+                    .screenshot(&st.ssp.join("admin-dashboard.png"))
+                    .await?;
+                Ok(())
+            }
+            Action::Install => {
+                // there is nothing to install
+                Ok(())
+            }
         }
     }
 }

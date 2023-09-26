@@ -1,42 +1,48 @@
+use crate::Runner;
 use crate::{Action, State};
+use async_trait::async_trait;
 use thirtyfour::prelude::*;
 
-pub async fn exec(st: State) -> WebDriverResult<()> {
-    match &st.act {
-        Action::Test => {
-            st.wd.goto(st.url.as_str()).await?;
+pub struct T();
 
-            st.wd
-                .screenshot(&st.ssp.join("screenshot-landing.png"))
-                .await?;
+#[async_trait]
+impl Runner for T {
+    async fn exec(&self, st: &State) -> WebDriverResult<()> {
+        match &st.act {
+            Action::Test => {
+                st.wd.goto(st.url.as_str()).await?;
 
-            let u = st.url.join("user/login")?;
-            st.wd.goto(u.as_str()).await?;
+                st.wd
+                    .screenshot(&st.ssp.join("screenshot-landing.png"))
+                    .await?;
 
-            let form = st.wd.form(By::Id("user-login-form")).await?;
-            form.set_by_name("name", "admin").await?;
-            form.set_by_name("pass", &st.pse.app_pass).await?;
+                let u = st.url.join("user/login")?;
+                st.wd.goto(u.as_str()).await?;
 
-            st.wd
-                .screenshot(&st.ssp.join("screenshot-login.png"))
-                .await?;
+                let form = st.wd.form(By::Id("user-login-form")).await?;
+                form.set_by_name("name", "admin").await?;
+                form.set_by_name("pass", &st.pse.app_pass).await?;
 
-            form.submit().await?;
+                st.wd
+                    .screenshot(&st.ssp.join("screenshot-login.png"))
+                    .await?;
 
-            st.sleep(1000).await;
+                form.submit().await?;
 
-            let u = st.url.join("admin/config")?;
-            st.wd.goto(u.as_str()).await?;
+                st.sleep(1000).await;
 
-            st.wd
-                .screenshot(&st.ssp.join("screenshot-admin-config.png"))
-                .await?;
-            Ok(())
+                let u = st.url.join("admin/config")?;
+                st.wd.goto(u.as_str()).await?;
 
-        }
-        Action::Install => {
-            // there is nothing to install
-            Ok(())
+                st.wd
+                    .screenshot(&st.ssp.join("screenshot-admin-config.png"))
+                    .await?;
+                Ok(())
+            }
+            Action::Install => {
+                // there is nothing to install
+                Ok(())
+            }
         }
     }
 }
