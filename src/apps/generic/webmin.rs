@@ -9,7 +9,6 @@ pub struct T();
 impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         let mut u = st.url.clone();
-        println!("WEBMIN LOGIN");
         // webmin login
         u.set_port(Some(12321))
             .map_err(|_| ParseError::InvalidPort)?; // FIXME?
@@ -20,11 +19,9 @@ impl Runner for T {
         (st.wd.find(By::Name("pass")).await?)
             .send_keys(&st.pse.root_pass)
             .await?;
-        println!("WEBMIN LOGIN SCREENSHOT");
         st.wd
             .screenshot(&st.ssp.join("screenshot-webmin-login.png"))
             .await?;
-        println!("DONE {:?}", st.ssp.join("screenshot-webmin-login.png"));
         // webmin landing page (tklbam)
         let submit = st.wd.find(By::Css("button[type='submit']")).await?;
         submit.click().await?;

@@ -83,19 +83,15 @@ pub trait Runner {
 
     async fn exec_full(&self, st: &State) -> WebDriverResult<()> {
         // generic runners should run for most/all appliances
-        println!("running generic runners...");
         GenericRunner::default().exec_full(st).await?;
-        println!("running specific exec...");
         self.exec(st).await
     }
 
     // run the scenario and manage the environment boilerplate
     async fn run(&self, st: &State) -> WebDriverResult<()> {
         let r = self.exec_full(st).await;
-        println!("done running exec_full");
         let wd = st.wd.clone();
         let _ = wd.quit().await;
-        println!("done closing webdriver");
         r
     }
 }
