@@ -35,6 +35,7 @@ mod drupal10;
 mod silverstripe;
 mod orangehrm;
 mod joomla4;
+mod suitecrm;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -125,5 +126,6 @@ pub static RUNNERS: Lazy<BoxAsyncFnMap> = Lazy::new(|| {
     h.insert("silverstripe", Box::new(silverstripe::exec));
     h.insert("orangehrm", Box::new(orangehrm::exec));
     h.insert("joomla4", Box::new(joomla4::exec));
+    h.insert("suitecrm", Box::new(suitecrm::exec));
     h
 });
