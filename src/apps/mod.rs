@@ -28,6 +28,7 @@ mod gitea;
 mod joomla4;
 mod lamp;
 mod nextcloud;
+mod lapp;
 mod nginx_php_fastcgi;
 mod nodejs;
 mod odoo;

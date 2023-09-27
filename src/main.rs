@@ -6,6 +6,7 @@ use url::Url;
 mod apps;
 use apps::*;
 
+
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
@@ -33,7 +34,21 @@ async fn main() -> color_eyre::Result<()> {
         Ok(s) => s,
         Err(_) => "http://localhost:4444/".to_string(),
     };
-    let wd = WebDriver::new(&wdurl, caps).await?;
+
+    let wd: WebDriverResult<WebDriver> = WebDriver::new(&wdurl, caps).await;
+
+    let wd_connect_attempts: i32 = env::var("WEBDRIVER_CONNECT_ATTEMPTS").unwrap_or("1".to_owned()).parse()?;
+    let wd_connect_timeout: f32 = env::var("WEBDRIVER_CONNECT_TIMEOUT").unwrap_or("1".to_owned()).parse()?;
+    for _ in 0..wd_connect_attempts {
+        if wd.is_ok() {
+            break;
+        }
+        tokio::time::sleep(std::time::Duration::from_secs_f32(wd_connect_timeout)).await;
+        println!("attempting to connect to selenium: ...");
+    }
+    let wd = wd?;
+
+
     // x + 8, y + 126 to account for window decorations/borders
     wd.set_window_rect(0, 0, 1366 + 8, 768 + 126).await?;
     let scrpath = match env::var("TKL_SCREENSHOT_PATH") {
