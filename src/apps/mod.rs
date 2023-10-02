@@ -38,6 +38,7 @@ mod redmine;
 mod silverstripe;
 mod suitecrm;
 mod wordpress;
+mod prestashop;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -135,6 +136,7 @@ impl Default for Runners {
         h.insert("orangehrm", Box::new(orangehrm::T()));
         h.insert("joomla4", Box::new(joomla4::T()));
         h.insert("suitecrm", Box::new(suitecrm::T()));
+        h.insert("prestashop", Box::new(prestashop::T()));
         Self(h)
     }
 }
