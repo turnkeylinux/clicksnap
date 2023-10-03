@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-thirtyfour = "0.32.0-rc.5"
+thirtyfour = "0.32.0-rc.8"
 color-eyre = "0.6"
-tokio = { version = "1.27", features = ["full"] }
-async-trait = "0.1.60"
-url = "2.3.1"
+tokio = { version = "1", features = ["full"] }
+async-trait = "0.1.73"
+url = "2.4.1"
