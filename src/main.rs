@@ -49,7 +49,8 @@ async fn main() -> color_eyre::Result<()> {
     let wd = wd?;
 
 
-    wd.set_window_rect(0, 0, 1366 + 8, 768 + 126).await?; // account for window geometry
+    // x + 8, y + 126 to account for window decorations/borders
+    wd.set_window_rect(0, 0, 1366 + 8, 768 + 126).await?;
     let scrpath = match env::var("TKL_SCREENSHOT_PATH") {
         Ok(s) => s,
         Err(_) => "/tmp".to_string(),
@@ -71,7 +72,7 @@ async fn main() -> color_eyre::Result<()> {
         pse: preseeds,
     };
     match RUNNERS.get(app.as_str()) {
-        Some(t) => t.exec(st).await.map_err(color_eyre::Report::new),
+        Some(t) => t.run(&st).await.map_err(color_eyre::Report::new),
         None => Err(color_eyre::Report::msg(format!("Unknown app: {:?}!", app))),
     }
 }
