@@ -11,6 +11,7 @@ impl Runner for T {
         match &st.act {
             Action::Test => {
                 // landing page (special case, waiting for navbar)
+                let mut u = st.url.clone();
                 st.wd.goto(u.as_str()).await?;
                 st.wait(By::Id("navbar")).await?;
                 st.wd
@@ -18,7 +19,6 @@ impl Runner for T {
                     .await?;
 
                 // login
-                let mut u = st.url.clone();
                 u.set_path("/user/login");
                 st.wd.goto(u.as_str()).await?;
                 (st.wd.find(By::Name("user_name")).await?)

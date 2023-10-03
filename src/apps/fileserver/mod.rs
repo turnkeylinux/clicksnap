@@ -12,12 +12,6 @@ impl Runner for T {
         match &st.act {
             Action::Test => {
                 let mut u = st.url.clone();
-                u.set_scheme("http").map_err(|_| ParseError::InvalidPort)?; // FIXME?
-                st.wd.goto(u.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-tklwebcp.png"))
-                    .await?;
-                let mut u = st.url.clone();
                 u.set_scheme("https").map_err(|_| ParseError::InvalidPort)?; // FIXME?
                 u.set_username("root")
                     .map_err(|_| ParseError::InvalidPort)?; // FIXME?

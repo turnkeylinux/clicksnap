@@ -11,11 +11,6 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // if there is a tkl-webcp page we're good
-                st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-tklwebcp.png"))
-                    .await?;
                 let mut u = st.url.clone();
                 u.set_port(Some(12322))
                     .map_err(|_| ParseError::InvalidPort)?; // FIXME?
