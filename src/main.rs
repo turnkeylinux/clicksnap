@@ -6,7 +6,6 @@ use url::Url;
 mod apps;
 use apps::*;
 
-
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
@@ -37,8 +36,12 @@ async fn main() -> color_eyre::Result<()> {
 
     let wd: WebDriverResult<WebDriver> = WebDriver::new(&wdurl, caps).await;
 
-    let wd_connect_attempts: i32 = env::var("WEBDRIVER_CONNECT_ATTEMPTS").unwrap_or("1".to_owned()).parse()?;
-    let wd_connect_timeout: f32 = env::var("WEBDRIVER_CONNECT_TIMEOUT").unwrap_or("1".to_owned()).parse()?;
+    let wd_connect_attempts: i32 = env::var("WEBDRIVER_CONNECT_ATTEMPTS")
+        .unwrap_or("1".to_owned())
+        .parse()?;
+    let wd_connect_timeout: f32 = env::var("WEBDRIVER_CONNECT_TIMEOUT")
+        .unwrap_or("1".to_owned())
+        .parse()?;
     for _ in 0..wd_connect_attempts {
         if wd.is_ok() {
             break;
@@ -47,7 +50,6 @@ async fn main() -> color_eyre::Result<()> {
         println!("attempting to connect to selenium: ...");
     }
     let wd = wd?;
-
 
     // x + 8, y + 126 to account for window decorations/borders
     wd.set_window_rect(0, 0, 1366 + 8, 768 + 126).await?;
@@ -71,8 +73,5 @@ async fn main() -> color_eyre::Result<()> {
         ssp: PathBuf::from(&scrpath),
         pse: preseeds,
     };
-    match RUNNERS.get(app.as_str()) {
-        Some(t) => t.run(&st).await.map_err(color_eyre::Report::new),
-        None => Err(color_eyre::Report::msg(format!("Unknown app: {:?}!", app))),
-    }
+    Runners::default().run(app.as_str(), &st).await
 }

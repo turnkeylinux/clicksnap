@@ -106,7 +106,6 @@ version = "0.1.0"
 dependencies = [
  "async-trait",
  "color-eyre",
- "once_cell",
  "thirtyfour",
  "tokio",
  "url",
