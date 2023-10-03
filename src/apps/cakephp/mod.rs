@@ -11,11 +11,8 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // main page
+                // docs
                 st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-landing.png"))
-                    .await?;
                 // hack to scroll to the bottom
                 st.wait(By::XPath("//h3[contains(text(), 'Training')]"))
                     .await?

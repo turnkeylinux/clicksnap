@@ -10,19 +10,15 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                let mut u = st.url.clone();
-
-                // landing page
+                // landing page (special case, waiting for navbar)
                 st.wd.goto(u.as_str()).await?;
-                (st.wd.query(By::Id("navbar")).first().await?)
-                    .wait_until()
-                    .displayed()
-                    .await?;
+                st.wait(By::Id("navbar")).await?;
                 st.wd
                     .screenshot(&st.ssp.join("screenshot-gitea-landing.png"))
                     .await?;
 
                 // login
+                let mut u = st.url.clone();
                 u.set_path("/user/login");
                 st.wd.goto(u.as_str()).await?;
                 (st.wd.find(By::Name("user_name")).await?)

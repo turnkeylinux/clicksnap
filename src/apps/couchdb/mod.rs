@@ -10,13 +10,9 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // main page
-                st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-landing.png"))
-                    .await?;
-                st.wait(By::Id("fauxton")).await?.click().await?;
                 // login screen
+                st.wd.goto(st.url.as_str()).await?;
+                st.wait(By::Id("fauxton")).await?.click().await?;
                 st.wait(By::Id("username"))
                     .await?
                     .send_keys("admin")

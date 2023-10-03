@@ -10,12 +10,9 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // main page
+                // login/main page
                 st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-mainpage.png"))
-                    .await?;
-                // login screen (which has really weird behavior)
+                // login form (which has really weird behavior)
                 // https://www.turnkeylinux.org/forum/support/wed-20180912-1251/bugzilla-needs-legitimate-login-and-password-continue
                 st.wait(By::Id("login_link_top")).await?.click().await?;
                 st.wait(By::Id("Bugzilla_login_top"))

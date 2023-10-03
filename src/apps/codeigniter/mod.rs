@@ -10,11 +10,7 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // main page
                 st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-landing.png"))
-                    .await?;
                 // about/docs section
                 st.wait(By::XPath("//footer"))
                     .await?

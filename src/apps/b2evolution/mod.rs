@@ -11,9 +11,6 @@ impl Runner for T {
         match &st.act {
             Action::Test => {
                 st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-landing.png"))
-                    .await?;
                 st.wait(By::XPath("//a[contains(text(), 'Go to the dashboard')]"))
                     .await?
                     .click()
@@ -45,13 +42,13 @@ impl Runner for T {
                     .await?;
                 st.wait(By::Id("cancel_button")).await?.click().await?;
 
-                // demo website
+                // demo website which is now not the same as initial landing page
                 st.wait(By::XPath("//a[contains(text(), 'View website now')]"))
                     .await?
                     .click()
                     .await?;
                 st.wd
-                    .screenshot(&st.ssp.join("screenshot-mainpage.png"))
+                    .screenshot(&st.ssp.join("screenshot-mainpage-demo.png"))
                     .await?;
                 st.wait(By::XPath(
                     "//a[contains(@title, 'Go to the site dashboard')]",
