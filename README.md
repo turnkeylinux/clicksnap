@@ -20,10 +20,6 @@ To see what is happening in real time and interact with the browser manually, us
 
 To run appliances in Docker alongside Selenium for quick setup, please refer to the repo for [tkldev-docker](https://github.com/turnkeylinux/tkldev-docker).
 
-## Tips and tricks
-
-Using the `core` testing scenario on any appliance will test and take screenshots of Webmin.
-
 ## Setup resources
 
 Install tools (to install on TKLDev/Debian)
