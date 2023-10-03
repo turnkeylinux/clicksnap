@@ -11,7 +11,7 @@ impl Runner for T {
         match &st.act {
             Action::Test => {
                 let u = st.url.clone();
-                // webmin login
+                // login page
                 st.wd.goto(u.as_str()).await?;
                 st.wait(By::Tag("form")).await?;
                 let form = st.wd.form(By::Tag("form")).await?;
