@@ -1,4 +1,5 @@
 use self::generic::GenericRunner;
+use color_eyre::eyre::WrapErr;
 use async_trait::async_trait;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -55,16 +56,15 @@ pub struct State {
 }
 
 impl State {
-    async fn wait(&self, sel: By) -> WebDriverResult<WebElement> {
-        let elt = self.wd.query(sel).first().await?;
-        elt.wait_until().displayed().await?;
+    async fn wait(&self, sel: By) -> color_eyre::Result<WebElement> {
+        let elt = self.wd.query(sel.clone()).first().await?;
+        elt.wait_until().displayed().await.wrap_err(format!("waiting for {:?} to be displayed", sel))?;
         Ok(elt)
     }
 
     async fn sleep(&self, m: u64) -> () {
         thirtyfour::support::sleep(std::time::Duration::from_millis(m)).await
-    }
-}
+    } }
 
 // TODO install is pretty much unused for now
 pub enum Action {
@@ -77,16 +77,16 @@ pub enum Action {
 pub trait Runner {
     // internal run function that contains the webdriver steps
     // meant to be defined by appliance script
-    async fn exec(&self, st: &State) -> WebDriverResult<()>;
+    async fn exec(&self, st: &State) -> color_eyre::Result<()>;
 
-    async fn exec_full(&self, st: &State) -> WebDriverResult<()> {
+    async fn exec_full(&self, st: &State) -> color_eyre::Result<()> {
         // generic runners should run for most/all appliances
         GenericRunner::default().exec_full(st).await?;
         self.exec(st).await
     }
 
     // run the scenario and manage the environment boilerplate
-    async fn run(&self, st: &State) -> WebDriverResult<()> {
+    async fn run(&self, st: &State) -> color_eyre::Result<()> {
         let r = self.exec_full(st).await;
         let wd = st.wd.clone();
         let _ = wd.quit().await;
@@ -140,11 +140,11 @@ impl Default for Runners {
 }
 
 impl Runners {
-    pub async fn run(&self, name: &str, st: &State) -> Result<(), color_eyre::Report> {
+    pub async fn run(&self, name: &str, st: &State) -> color_eyre::Result<()> {
         let app = self
             .0
             .get(name)
             .ok_or(color_eyre::Report::msg(format!("Unknown app: '{name:?}'!")))?;
-        app.run(st).await.map_err(color_eyre::Report::new)
+        app.run(st).await
     }
 }

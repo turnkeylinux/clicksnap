@@ -1,6 +1,5 @@
 use super::{BoxRunner, Runner, State};
 use async_trait::async_trait;
-use thirtyfour::prelude::WebDriverResult;
 
 pub mod adminer;
 pub mod landing;
@@ -20,11 +19,11 @@ impl Default for GenericRunner {
 #[async_trait]
 impl Runner for GenericRunner {
     // dummy unused impl
-    async fn exec(&self, _: &State) -> WebDriverResult<()> {
+    async fn exec(&self, _: &State) -> color_eyre::Result<()> {
         unreachable!()
     }
 
-    async fn exec_full(&self, st: &State) -> WebDriverResult<()> {
+    async fn exec_full(&self, st: &State) -> color_eyre::Result<()> {
         for r in self.0.iter() {
             r.exec(st).await?
         }
