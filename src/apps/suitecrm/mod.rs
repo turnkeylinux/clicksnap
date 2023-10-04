@@ -10,7 +10,7 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // landing page
+                // login/main page
                 st.wd.goto(st.url.as_str()).await?;
                 st.wait(By::Id("login-button")).await?;
                 st.wd

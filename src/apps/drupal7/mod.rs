@@ -15,11 +15,6 @@ impl Runner for T {
                 let form = st.wd.form(By::Id("user-login-form")).await?;
                 form.set_by_name("name", "admin").await?;
                 form.set_by_name("pass", &st.pse.app_pass).await?;
-
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-landing.png"))
-                    .await?;
-
                 form.submit().await?;
 
                 let u = st.url.join("#overlay=admin/dashboard")?;

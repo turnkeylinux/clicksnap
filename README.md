@@ -16,13 +16,9 @@ Expected result: success or failure based on whether the pages required for the 
 
 Expects Selenium Webdriver to be listening somewhere accessible (default is `localhost:4444`, can be overridden by setting `TKL_WEBDRIVER_URL`).
 
-To see what is happening in real time and interact with the browser manually, use noVNC at `localhost:7900` (password `secret`).
+To see what is happening in real time and interact with the browser manually, use the container-provided noVNC at `localhost:7900` (password `secret`).
 
 To run appliances in Docker alongside Selenium for quick setup, please refer to the repo for [tkldev-docker](https://github.com/turnkeylinux/tkldev-docker).
-
-## Tips and tricks
-
-Using the `core` testing scenario on any appliance will test and take screenshots of Webmin.
 
 ## Setup resources
 
@@ -38,11 +34,6 @@ Selenium Webdriver:
 docker run -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:4.7.2-20221219
 ```
 
-noVNC:
-
-```
-apt install novnc
-```
 Then from your local browser, browse to:
 
 ```
@@ -54,7 +45,7 @@ Where:
     - above IPs can be the same (if they are running on the same host)
     - `7900` is the default port and should not need adjustment
 
-E.g. I am running Selenium (via Docker) on my TKLDev (ip: 192.168.1.157), which also has noVNC installed. To connect:
+E.g. I am running Selenium (via Docker) on my TKLDev (ip: 192.168.1.157). To connect:
 
 ```
 http://192.168.1.157:7900/vnc.html?host=192.168.1.157&port=7900

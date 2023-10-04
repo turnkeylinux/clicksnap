@@ -10,12 +10,8 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // landing page
-                st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-landing.png"))
-                    .await?;
                 // db example
+                st.wd.goto(st.url.as_str()).await?;
                 let dbe = st
                     .wd
                     .query(By::XPath(

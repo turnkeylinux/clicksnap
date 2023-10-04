@@ -10,12 +10,8 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // main page
-                st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-mainpage.png"))
-                    .await?;
                 // login screen
+                st.wd.goto(st.url.as_str()).await?;
                 st.wait(By::XPath("//a[@title = 'Log In']"))
                     .await?
                     .click()
@@ -45,7 +41,6 @@ impl Runner for T {
                 st.wd
                     .screenshot(&st.ssp.join("screenshot-mediamanager.png"))
                     .await?;
-                // main page
                 st.wd.goto(st.url.as_str()).await?;
                 st.wait(By::XPath("//a[contains(@title, 'Edit this page')]"))
                     .await?

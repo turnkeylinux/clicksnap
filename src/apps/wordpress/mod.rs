@@ -10,10 +10,6 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-main.png"))
-                    .await?;
                 let mut u = st.url.clone();
                 u.set_path("wp-login.php");
                 st.wd.goto(u.as_str()).await?;

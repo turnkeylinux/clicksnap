@@ -12,9 +12,8 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // main page
-                st.wd.goto(st.url.as_str()).await?;
                 // login screen
+                st.wd.goto(st.url.as_str()).await?;
                 st.wait(By::Id("pseudonym_session_unique_id"))
                     .await?
                     .send_keys(&st.pse.app_email)

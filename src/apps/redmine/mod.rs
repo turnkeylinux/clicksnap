@@ -11,9 +11,6 @@ impl Runner for T {
         match &st.act {
             Action::Test => {
                 st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-mainpage.png"))
-                    .await?;
                 (st.wd.find(By::ClassName("login")).await?).click().await?;
                 (st.wd.find(By::Id("username")).await?)
                     .send_keys("admin")

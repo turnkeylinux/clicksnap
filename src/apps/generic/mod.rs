@@ -2,6 +2,7 @@ use super::{BoxRunner, Runner, State};
 use async_trait::async_trait;
 use thirtyfour::prelude::WebDriverResult;
 
+pub mod adminer;
 pub mod landing;
 pub mod webmin;
 

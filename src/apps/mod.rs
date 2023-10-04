@@ -1,12 +1,9 @@
+use self::generic::GenericRunner;
 use async_trait::async_trait;
-use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use std::path::PathBuf;
 use thirtyfour::prelude::*;
 use url::Url;
-
-use self::generic::GenericRunner;
-
 mod asp_net_core;
 mod avideo;
 mod b2evolution;
@@ -27,8 +24,8 @@ mod generic;
 mod gitea;
 mod joomla4;
 mod lamp;
-mod nextcloud;
 mod lapp;
+mod nextcloud;
 mod nginx_php_fastcgi;
 mod nodejs;
 mod odoo;
@@ -75,7 +72,7 @@ pub enum Action {
     Install,
 }
 
-// TODO hide some of these methods with type magic
+// TODO hide some of these methods with type magic?
 #[async_trait]
 pub trait Runner {
     // internal run function that contains the webdriver steps
@@ -100,40 +97,54 @@ pub trait Runner {
 type BoxRunner = Box<dyn Runner + Send + Sync>;
 type BoxRunnerMap = HashMap<&'static str, BoxRunner>;
 
-pub static RUNNERS: Lazy<BoxRunnerMap> = Lazy::new(|| {
-    let mut h: BoxRunnerMap = HashMap::new();
-    h.insert("asp-net-core", Box::new(asp_net_core::T()));
-    h.insert("avideo", Box::new(avideo::T()));
-    h.insert("b2evolution", Box::new(b2evolution::T()));
-    h.insert("bagisto", Box::new(bagisto::T()));
-    h.insert("bugzilla", Box::new(bugzilla::T()));
-    h.insert("cakephp", Box::new(cakephp::T()));
-    h.insert("canvas", Box::new(canvas::T()));
-    h.insert("codeigniter", Box::new(codeigniter::T()));
-    h.insert("concrete-cms", Box::new(concrete_cms::T()));
-    h.insert("core", Box::new(core::T()));
-    h.insert("couchdb", Box::new(couchdb::T()));
-    h.insert("django", Box::new(django::T()));
-    h.insert("dokuwiki", Box::new(dokuwiki::T()));
-    h.insert("fileserver", Box::new(fileserver::T()));
-    h.insert("lamp", Box::new(lamp::T()));
-    h.insert("lapp", Box::new(lamp::T()));
-    h.insert("mysql", Box::new(lamp::T()));
-    h.insert("nginx-php-fastcgi", Box::new(nginx_php_fastcgi::T()));
-    h.insert("nodejs", Box::new(nodejs::T()));
-    h.insert("odoo", Box::new(odoo::T()));
-    h.insert("openvpn", Box::new(openvpn::T()));
-    h.insert("owncloud", Box::new(owncloud::T()));
-    h.insert("nextcloud", Box::new(nextcloud::T()));
-    h.insert("rails", Box::new(rails::T()));
-    h.insert("redmine", Box::new(redmine::T()));
-    h.insert("wordpress", Box::new(wordpress::T()));
-    h.insert("gitea", Box::new(gitea::T()));
-    h.insert("drupal7", Box::new(drupal7::T()));
-    h.insert("drupal10", Box::new(drupal10::T()));
-    h.insert("silverstripe", Box::new(silverstripe::T()));
-    h.insert("orangehrm", Box::new(orangehrm::T()));
-    h.insert("joomla4", Box::new(joomla4::T()));
-    h.insert("suitecrm", Box::new(suitecrm::T()));
-    h
-});
+pub struct Runners(BoxRunnerMap);
+
+impl Default for Runners {
+    fn default() -> Self {
+        let mut h: BoxRunnerMap = HashMap::new();
+        h.insert("asp-net-core", Box::new(asp_net_core::T()));
+        h.insert("avideo", Box::new(avideo::T()));
+        h.insert("b2evolution", Box::new(b2evolution::T()));
+        h.insert("bagisto", Box::new(bagisto::T()));
+        h.insert("bugzilla", Box::new(bugzilla::T()));
+        h.insert("cakephp", Box::new(cakephp::T()));
+        h.insert("canvas", Box::new(canvas::T()));
+        h.insert("codeigniter", Box::new(codeigniter::T()));
+        h.insert("concrete-cms", Box::new(concrete_cms::T()));
+        h.insert("core", Box::new(core::T()));
+        h.insert("couchdb", Box::new(couchdb::T()));
+        h.insert("django", Box::new(django::T()));
+        h.insert("dokuwiki", Box::new(dokuwiki::T()));
+        h.insert("fileserver", Box::new(fileserver::T()));
+        h.insert("lamp", Box::new(lamp::T()));
+        h.insert("lapp", Box::new(lamp::T()));
+        h.insert("mysql", Box::new(lamp::T()));
+        h.insert("nginx-php-fastcgi", Box::new(nginx_php_fastcgi::T()));
+        h.insert("nodejs", Box::new(nodejs::T()));
+        h.insert("odoo", Box::new(odoo::T()));
+        h.insert("openvpn", Box::new(openvpn::T()));
+        h.insert("owncloud", Box::new(owncloud::T()));
+        h.insert("nextcloud", Box::new(nextcloud::T()));
+        h.insert("rails", Box::new(rails::T()));
+        h.insert("redmine", Box::new(redmine::T()));
+        h.insert("wordpress", Box::new(wordpress::T()));
+        h.insert("gitea", Box::new(gitea::T()));
+        h.insert("drupal7", Box::new(drupal7::T()));
+        h.insert("drupal10", Box::new(drupal10::T()));
+        h.insert("silverstripe", Box::new(silverstripe::T()));
+        h.insert("orangehrm", Box::new(orangehrm::T()));
+        h.insert("joomla4", Box::new(joomla4::T()));
+        h.insert("suitecrm", Box::new(suitecrm::T()));
+        Self(h)
+    }
+}
+
+impl Runners {
+    pub async fn run(&self, name: &str, st: &State) -> Result<(), color_eyre::Report> {
+        let app = self
+            .0
+            .get(name)
+            .ok_or(color_eyre::Report::msg(format!("Unknown app: '{name:?}'!")))?;
+        app.run(st).await.map_err(color_eyre::Report::new)
+    }
+}

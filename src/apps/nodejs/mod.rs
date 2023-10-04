@@ -10,11 +10,7 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                // if there is a tkl-webcp page we're good
-                st.wd.goto(st.url.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-tklwebcp.png"))
-                    .await?;
+                // generic landing page (tkl-webcp) screenshot is enough
                 Ok(())
             }
             Action::Install => {

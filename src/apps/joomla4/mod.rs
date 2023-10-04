@@ -10,10 +10,8 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
+                // login form
                 st.wd.goto(st.url.as_str()).await?;
-
-                st.wd.screenshot(&st.ssp.join("landing.png")).await?;
-
                 let form = st.wd.form(By::Id("login-form-16")).await?;
 
                 form.set_by_name("username", "admin").await?;
