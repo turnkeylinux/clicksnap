@@ -12,7 +12,7 @@ pub struct T(pub Flavor);
 
 #[async_trait]
 impl Runner for T {
-    async fn exec(&self, st: &State) -> WebDriverResult<()> {
+    async fn exec(&self, st: &State) -> color_eyre::Result<()> {
         let mut u = st.url.clone();
         u.set_port(Some(12322))
             .map_err(|_| ParseError::InvalidPort)?; // FIXME?

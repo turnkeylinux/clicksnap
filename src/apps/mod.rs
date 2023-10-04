@@ -64,8 +64,7 @@ impl State {
 
     async fn sleep(&self, m: u64) -> () {
         thirtyfour::support::sleep(std::time::Duration::from_millis(m)).await
-    }
-}
+    } }
 
 // TODO install is pretty much unused for now
 pub enum Action {
@@ -141,11 +140,11 @@ impl Default for Runners {
 }
 
 impl Runners {
-    pub async fn run(&self, name: &str, st: &State) -> Result<(), color_eyre::Report> {
+    pub async fn run(&self, name: &str, st: &State) -> color_eyre::Result<()> {
         let app = self
             .0
             .get(name)
             .ok_or(color_eyre::Report::msg(format!("Unknown app: '{name:?}'!")))?;
-        app.run(st).await.map_err(color_eyre::Report::new)
+        app.run(st).await
     }
 }
