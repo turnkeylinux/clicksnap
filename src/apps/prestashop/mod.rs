@@ -10,8 +10,6 @@ impl Runner for T {
     async fn exec(&self, st: &State) -> WebDriverResult<()> {
         match &st.act {
             Action::Test => {
-                let _u = st.url.clone();
-
                 st.wd.goto(st.url.join("login")?).await?;
 
                 st.wd
@@ -44,12 +42,10 @@ impl Runner for T {
                 st.wd
                     .screenshot(&st.ssp.join("screenshot-admin-modules.png"))
                     .await?;
-
-                st.sleep(1000).await;
                 Ok(())
             }
             Action::Install => {
-                // there is nothing to install for core
+                // there is nothing to install for prestashop
                 Ok(())
             }
         }

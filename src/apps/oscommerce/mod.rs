@@ -53,7 +53,7 @@ impl Runner for T {
                 Ok(())
             }
             Action::Install => {
-                // there is nothing to install for core
+                // there is nothing to install for oscommerce
                 Ok(())
             }
         }
