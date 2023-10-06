@@ -40,6 +40,8 @@ mod suitecrm;
 mod wordpress;
 mod prestashop;
 mod oscommerce;
+mod bookstack;
+mod mantis;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -139,6 +141,8 @@ impl Default for Runners {
         h.insert("suitecrm", Box::new(suitecrm::T()));
         h.insert("prestashop", Box::new(prestashop::T()));
         h.insert("oscommerce", Box::new(oscommerce::T()));
+        h.insert("bookstack", Box::new(bookstack::T()));
+        h.insert("mantis", Box::new(mantis::T()));
         Self(h)
     }
 }
