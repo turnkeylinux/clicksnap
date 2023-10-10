@@ -42,6 +42,7 @@ mod prestashop;
 mod oscommerce;
 mod bookstack;
 mod mantis;
+mod mattermost;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -143,6 +144,7 @@ impl Default for Runners {
         h.insert("oscommerce", Box::new(oscommerce::T()));
         h.insert("bookstack", Box::new(bookstack::T()));
         h.insert("mantis", Box::new(mantis::T()));
+        h.insert("mattermost", Box::new(mattermost::T()));
         Self(h)
     }
 }
