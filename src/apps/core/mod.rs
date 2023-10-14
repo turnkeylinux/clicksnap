@@ -1,13 +1,5 @@
-use super::Runner;
-use crate::State;
-use async_trait::async_trait;
+use super::App;
 
-pub struct T();
-
-#[async_trait]
-impl Runner for T {
-    async fn exec(&self, _: &State) -> color_eyre::Result<()> {
-        // core only uses the default generic runners and there is nothing to install
-        Ok(())
-    }
-}
+// core only uses the default generic runners
+// there is also nothing to install
+pub static APP: App = App::default();

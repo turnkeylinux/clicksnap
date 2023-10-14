@@ -1,48 +1,44 @@
-use crate::Runner;
-use crate::{Action, State};
-use async_trait::async_trait;
+use super::{App, State, Step};
+use futures::FutureExt;
 use thirtyfour::prelude::*;
 
-pub struct T();
-
-#[async_trait]
-impl Runner for T {
-    async fn exec(&self, st: &State) -> color_eyre::Result<()> {
-        match &st.act {
-            Action::Test => {
-                // db example
-                st.wd.goto(st.url.as_str()).await?;
-                let dbe = st
-                    .wd
-                    .query(By::XPath(
+pub const APP: App = App {
+    test: &[
+        Step {
+            name: "db-example",
+            desc: "ASP.NET database demo",
+            f: |st: &State| {
+                async {
+                    st.goto("/").await?;
+                    st.wait(By::XPath(
                         "//a[contains(@class, 'nav-link') and text() = 'DBExample']",
                     ))
-                    .first()
+                    .await?
+                    .click()
                     .await?;
-                dbe.wait_until().displayed().await?;
-                dbe.click().await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-db-example.png"))
-                    .await?;
-                // privacy policy demo
-                let pp = st
-                    .wd
-                    .query(By::XPath(
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "privacy-example",
+            desc: "ASP.NET privacy policy example",
+            f: |st: &State| {
+                async {
+                    st.wait(By::XPath(
                         "//a[contains(@class, 'nav-link') and text() = 'Privacy']",
                     ))
-                    .first()
+                    .await?
+                    .click()
                     .await?;
-                pp.wait_until().displayed().await?;
-                pp.click().await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-privacy-example.png"))
-                    .await?;
-                Ok(())
-            }
-            Action::Install => {
-                // there is nothing to install
-                Ok(())
-            }
-        }
-    }
-}
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+    ],
+    ..App::default()
+};

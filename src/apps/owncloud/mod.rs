@@ -1,49 +1,61 @@
-use crate::Runner;
-use crate::{Action, State};
-use async_trait::async_trait;
+use super::{App, State, Step};
+use futures::FutureExt;
 use thirtyfour::prelude::*;
 
-pub struct T();
-
-#[async_trait]
-impl Runner for T {
-    async fn exec(&self, st: &State) -> color_eyre::Result<()> {
-        match &st.act {
-            Action::Test => {
-                st.wd.goto(st.url.as_str()).await?;
-                (st.wd.find(By::Id("user")).await?)
-                    .send_keys("admin")
-                    .await?;
-                (st.wd.find(By::Id("password")).await?)
-                    .send_keys(&st.pse.app_pass)
-                    .await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-login.png"))
-                    .await?;
-                (st.wd.find(By::Id("submit")).await?).click().await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-files.png"))
-                    .await?;
-                let u = st.url.join("/index.php/settings/admin?sectionid=general")?;
-                st.wd.goto(u.as_str()).await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-settings.png"))
-                    .await?;
-                let u = st.url.join("/index.php/apps/market/#/")?;
-                st.wd.goto(u.as_str()).await?;
-                (st.wd.query(By::ClassName("app-preview")).first().await?)
-                    .wait_until()
-                    .displayed()
-                    .await?;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-market.png"))
-                    .await?;
-                Ok(())
-            }
-            Action::Install => {
-                // there is nothing to install
-                Ok(())
-            }
-        }
-    }
-}
+pub const APP: App = App {
+    test: &[
+        Step {
+            name: "login",
+            f: |st: &State| {
+                async {
+                    (st.wd.find(By::Id("user")).await?)
+                        .send_keys("admin")
+                        .await?;
+                    (st.wd.find(By::Id("password")).await?)
+                        .send_keys(&st.pse.app_pass)
+                        .await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "files",
+            f: |st: &State| {
+                async {
+                    (st.wd.find(By::Id("submit")).await?).click().await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "settings",
+            f: |st: &State| {
+                async {
+                    st.wd
+                        .goto("/index.php/settings/admin?sectionid=general")
+                        .await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "market",
+            f: |st: &State| {
+                async {
+                    st.wd.goto("/index.php/apps/market/#/").await?;
+                    st.wait(By::ClassName("app-preview")).await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+    ],
+    ..App::default()
+};

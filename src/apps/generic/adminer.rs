@@ -1,54 +1,107 @@
-use crate::apps::{Runner, State};
-use async_trait::async_trait;
+use crate::apps::{State, Step, Steps};
+use futures::FutureExt;
 use thirtyfour::prelude::*;
-use url::ParseError;
 
-pub enum Flavor {
-    MySQL,
-    Postgres,
-}
+// TODO DRY
 
-pub struct T(pub Flavor);
+const MY_USERNAME: &str = "adminer";
+const PG_USERNAME: &str = "postgres";
 
-#[async_trait]
-impl Runner for T {
-    async fn exec(&self, st: &State) -> color_eyre::Result<()> {
-        let mut u = st.url.clone();
-        u.set_port(Some(12322))
-            .map_err(|_| ParseError::InvalidPort)?; // FIXME?
-        st.wd.goto(u.as_str()).await?;
+const MY_ID: &str = "Db-mysql";
+const PG_ID: &str = "Db-postgres";
 
-        let username = match self.0 {
-            Flavor::MySQL => "adminer",
-            Flavor::Postgres => "postgres",
-        };
+pub const STEPS_MY: Steps = &[
+    Step {
+        name: "Adminer login page",
+        desc: "Take screenshot of the Adminer login page (MySQL / MariaDB)",
+        screenshot: "adminer-login-mysql",
+        f: |st: &State| {
+            async {
+                st.goto_port(12322, "/").await?;
+                (st.wd.find(By::Name("auth[username]")).await?)
+                    .send_keys(MY_USERNAME)
+                    .await?;
+                (st.wd.find(By::Name("auth[password]")).await?)
+                    .send_keys(&st.pse.root_pass)
+                    .await?;
+                Ok(())
+            }
+            .boxed()
+        },
+    },
+    Step {
+        name: "Adminer front page",
+        desc: "Take screenshot of the Adminer front page (MySQL / MariaDB)",
+        screenshot: "adminer-frontpage-mysql",
+        f: |st: &State| {
+            async {
+                (st.wd.find(By::Css("input[type='submit']")).await?)
+                    .click()
+                    .await?;
+                Ok(())
+            }
+            .boxed()
+        },
+    },
+    Step {
+        name: "Adminer database page",
+        desc: "Take screenshot of the Adminer database page (MySQL / MariaDB)",
+        screenshot: "adminer-database-mysql",
+        f: |st: &State| {
+            async {
+                st.sleep(500).await;
+                (st.wd.find(By::Id(MY_ID)).await?).click().await?;
+                Ok(())
+            }
+            .boxed()
+        },
+    },
+];
 
-        (st.wd.find(By::Name("auth[username]")).await?)
-            .send_keys(username)
-            .await?;
-        (st.wd.find(By::Name("auth[password]")).await?)
-            .send_keys(&st.pse.root_pass)
-            .await?;
-        st.wd
-            .screenshot(&st.ssp.join("screenshot-adminer-login.png"))
-            .await?;
-        (st.wd.find(By::Css("input[type='submit']")).await?)
-            .click()
-            .await?;
-        st.wd
-            .screenshot(&st.ssp.join("screenshot-adminer-frontpage.png"))
-            .await?;
-
-        let db_id = match self.0 {
-            Flavor::MySQL => "Db-mysql",
-            Flavor::Postgres => "Db-postgres",
-        };
-
-        (st.wd.find(By::Id(db_id)).await?).click().await?;
-        st.sleep(500).await;
-        st.wd
-            .screenshot(&st.ssp.join("screenshot-adminer-database.png"))
-            .await?;
-        Ok(())
-    }
-}
+pub const STEPS_PG: Steps = &[
+    Step {
+        name: "Adminer login page",
+        desc: "Take screenshot of the Adminer login page (Postgres)",
+        screenshot: "adminer-login-pgsql",
+        f: |st: &State| {
+            async {
+                st.goto_port(12322, "/").await?;
+                (st.wd.find(By::Name("auth[username]")).await?)
+                    .send_keys(PG_USERNAME)
+                    .await?;
+                (st.wd.find(By::Name("auth[password]")).await?)
+                    .send_keys(&st.pse.root_pass)
+                    .await?;
+                Ok(())
+            }
+            .boxed()
+        },
+    },
+    Step {
+        name: "Adminer front page",
+        desc: "Take screenshot of the Adminer front page (Postgres)",
+        screenshot: "adminer-frontpage-pgsql",
+        f: |st: &State| {
+            async {
+                (st.wd.find(By::Css("input[type='submit']")).await?)
+                    .click()
+                    .await?;
+                Ok(())
+            }
+            .boxed()
+        },
+    },
+    Step {
+        name: "Adminer database page",
+        desc: "Take screenshot of the Adminer database page (Postgres)",
+        screenshot: "adminer-database-pgsql",
+        f: |st: &State| {
+            async {
+                (st.wd.find(By::Id(PG_ID)).await?).click().await?;
+                st.sleep(500).await;
+                Ok(())
+            }
+            .boxed()
+        },
+    },
+];

@@ -1,61 +1,79 @@
-use crate::Runner;
-use crate::{Action, State};
-use async_trait::async_trait;
+use super::{App, State, Step};
+use futures::FutureExt;
 use thirtyfour::prelude::*;
 
-pub struct T();
-
-#[async_trait]
-impl Runner for T {
-    async fn exec(&self, st: &State) -> color_eyre::Result<()> {
-        match &st.act {
-            Action::Test => {
-                st.wd.goto(st.url.join("furniture")?).await?;
-
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-furniture.png"))
-                    .await?;
-
-                st.wd.goto(st.url.join("printshop")?).await?;
-
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-printshop.png"))
-                    .await?;
-
-                st.wd.goto(st.url.join("b2b-supermarket")?).await?;
-
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-b2b-supermarket.png"))
-                    .await?;
-
-                st.wd.goto(st.url.join("watch")?).await?;
-
-                st.sleep(1000).await;
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-watch.png"))
-                    .await?;
-
-                st.wd.goto(st.url.join("admin")?).await?;
-
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-admin-login.png"))
-                    .await?;
-
-                let form = st.wd.form(By::Css("form.login-form")).await?;
-                form.set_by_name("email_address", &st.pse.app_email).await?;
-                form.set_by_name("password", &st.pse.app_pass).await?;
-                form.submit().await?;
-
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-admin-dash.png"))
-                    .await?;
-
-                Ok(())
-            }
-            Action::Install => {
-                // there is nothing to install for oscommerce
-                Ok(())
-            }
-        }
-    }
-}
+pub const APP: App = App {
+    test: &[
+        Step {
+            name: "furniture",
+            f: |st: &State| {
+                async {
+                    st.goto("furniture").await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "printshop",
+            f: |st: &State| {
+                async {
+                    st.goto("printshop").await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "b2b-supermarket",
+            f: |st: &State| {
+                async {
+                    st.goto("b2b-supermarket").await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "watch",
+            f: |st: &State| {
+                async {
+                    st.goto("watch").await?;
+                    st.sleep(1000).await;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "admin-login",
+            f: |st: &State| {
+                async {
+                    st.goto("admin").await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "admin-dash",
+            f: |st: &State| {
+                async {
+                    let form = st.wd.form(By::Css("form.login-form")).await?;
+                    form.set_by_name("email_address", &st.pse.app_email).await?;
+                    form.set_by_name("password", &st.pse.app_pass).await?;
+                    form.submit().await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+    ],
+    ..App::default()
+};
