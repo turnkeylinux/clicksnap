@@ -35,8 +35,7 @@ pub const APP: App = App {
             name: "settings",
             f: |st: &State| {
                 async {
-                    st.wd
-                        .goto("/index.php/settings/admin?sectionid=general")
+                    st.goto("/index.php/settings/admin?sectionid=general")
                         .await?;
                     Ok(())
                 }
@@ -48,7 +47,7 @@ pub const APP: App = App {
             name: "market",
             f: |st: &State| {
                 async {
-                    st.wd.goto("/index.php/apps/market/#/").await?;
+                    st.goto("/index.php/apps/market/#/").await?;
                     st.wait(By::ClassName("app-preview")).await?;
                     Ok(())
                 }

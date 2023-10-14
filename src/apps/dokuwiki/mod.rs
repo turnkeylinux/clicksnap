@@ -9,7 +9,6 @@ pub const APP: App = App {
             f: |st: &State| {
                 async {
                     // login screen
-                    st.wd.goto(st.url.as_str()).await?;
                     st.wait(By::XPath("//a[@title = 'Log In']"))
                         .await?
                         .click()

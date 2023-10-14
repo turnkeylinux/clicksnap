@@ -9,8 +9,7 @@ pub const APP: App = App {
             f: |st: &State| {
                 async {
                     // login page
-                    let u = st.url.join("user/login")?;
-                    st.wd.goto(u.as_str()).await?;
+                    st.goto("user/login").await?;
 
                     let form = st.wd.form(By::Id("user-login-form")).await?;
                     form.set_by_name("name", "admin").await?;

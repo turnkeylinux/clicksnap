@@ -16,7 +16,7 @@ pub const APP: App = App {
                         .send_keys(&st.pse.app_pass)
                         .await?;
                     (st.wd.find(By::Id("login-submit")).await?).click().await?;
-                    st.wd.goto("settings").await?;
+                    st.goto("settings").await?;
                     Ok(())
                 }
                 .boxed()

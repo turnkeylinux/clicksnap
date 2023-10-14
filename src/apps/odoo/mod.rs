@@ -8,7 +8,7 @@ pub const APP: App = App {
             name: "apps",
             f: |st: &State| {
                 async {
-                    st.wd.goto("/web/login").await?;
+                    st.goto("/web/login").await?;
                     (st.wd.find(By::Id("login")).await?)
                         .send_keys("admin")
                         .await?;

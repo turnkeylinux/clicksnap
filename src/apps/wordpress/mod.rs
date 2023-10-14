@@ -36,7 +36,7 @@ pub const APP: App = App {
             name: "new-post",
             f: |st: &State| {
                 async {
-                    st.wd.goto("wp-admin/post-new.php").await?;
+                    st.goto("wp-admin/post-new.php").await?;
                     Ok(())
                 }
                 .boxed()
