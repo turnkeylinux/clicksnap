@@ -91,7 +91,7 @@ impl State {
 
 type StepFn = fn(&State) -> BoxFuture<'_, color_eyre::Result<()>>;
 
-struct App {
+pub struct App {
     pre: Steps,
     test: Steps,
     install: Steps,
@@ -120,7 +120,7 @@ impl Default for App {
 type Steps = &'static [Step];
 
 #[derive(Clone)]
-struct Step {
+pub struct Step {
     name: &'static str,
     desc: &'static str,
     screenshot: &'static str,
