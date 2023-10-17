@@ -1,53 +1,69 @@
-use crate::Runner;
-use crate::{Action, State};
-use async_trait::async_trait;
+use super::{App, State, Step};
+use futures::FutureExt;
 use thirtyfour::prelude::*;
 
-pub struct T();
+pub const APP: App = App {
+    test: &[
+        Step {
+            name: "user-login",
+            f: |st: &State| {
+                async {
+                    st.goto("login").await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "admin-login",
+            f: |st: &State| {
+                async {
+                    st.goto("administration").await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "admin-dashboard",
+            f: |st: &State| {
+                async {
+                    st.wait(By::Id("login_form")).await?;
+                    let form = st.wd.form(By::Id("login_form")).await?;
 
-#[async_trait]
-impl Runner for T {
-    async fn exec(&self, st: &State) -> color_eyre::Result<()> {
-        match &st.act {
-            Action::Test => {
-                st.wd.goto(st.url.join("login")?).await?;
+                    form.set_by_name("email", &st.pse.app_email).await?;
+                    form.set_by_name("passwd", &st.pse.app_pass).await?;
 
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-user-login.png"))
-                    .await?;
+                    form.submit().await?;
 
-                st.wd.goto(st.url.join("administration")?).await?;
+                    st.wait(By::Id("subtab-AdminParentModulesSf")).await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "admin-modules",
+            f: |st: &State| {
+                async {
+                    st.wait(By::Id("subtab-AdminParentModulesSf"))
+                        .await?
+                        .click()
+                        .await?;
+                    st.wait(By::Css("li#subtab-AdminModulesSf > a"))
+                        .await?
+                        .click()
+                        .await?;
 
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-admin-login.png"))
-                    .await?;
-
-                st.wait(By::Id("login_form")).await?;
-                let form = st.wd.form(By::Id("login_form")).await?;
-
-                form.set_by_name("email", &st.pse.app_email).await?;
-                form.set_by_name("passwd", &st.pse.app_pass).await?;
-
-                form.submit().await?;
-
-                st.wait(By::Id("subtab-AdminParentModulesSf")).await?;
-
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-admin-dashboard.png"))
-                    .await?;
-
-                st.wait(By::Id("subtab-AdminParentModulesSf")).await?.click().await?;
-                st.wait(By::Css("li#subtab-AdminModulesSf > a")).await?.click().await?;
-
-                st.wd
-                    .screenshot(&st.ssp.join("screenshot-admin-modules.png"))
-                    .await?;
-                Ok(())
-            }
-            Action::Install => {
-                // there is nothing to install for prestashop
-                Ok(())
-            }
-        }
-    }
-}
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+    ],
+    ..App::default()
+};

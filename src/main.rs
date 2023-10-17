@@ -1,6 +1,5 @@
 use std::{env, path::PathBuf};
 use thirtyfour::prelude::*;
-use tokio;
 use url::Url;
 
 mod apps;
@@ -24,7 +23,7 @@ async fn main() -> color_eyre::Result<()> {
         x => panic!("unknown action: {}", x),
     };
 
-    let app = &args[2];
+    let name = args[2].to_string();
     let url = Url::parse(&args[3])?;
 
     let mut caps = DesiredCapabilities::chrome();
@@ -66,12 +65,14 @@ async fn main() -> color_eyre::Result<()> {
         app_domain: env::var("APP_DOMAIN").unwrap_or("example.com".to_owned()),
     };
 
-    let st = State {
-        wd,
-        act,
-        url,
-        ssp: PathBuf::from(&scrpath),
-        pse: preseeds,
-    };
-    Runners::default().run(app.as_str(), &st).await
+    Runners::default()
+        .run(State {
+            name,
+            wd,
+            act,
+            url,
+            ssp: PathBuf::from(&scrpath),
+            pse: preseeds,
+        })
+        .await
 }

@@ -1,18 +1,11 @@
-use crate::apps::{Runner, State};
-use async_trait::async_trait;
-
+use crate::apps::{State, Step, Steps};
+use futures::FutureExt;
 
 // landing page present on most appliances
 
-pub struct T();
-
-#[async_trait]
-impl Runner for T {
-    async fn exec(&self, st: &State) -> color_eyre::Result<()> {
-        st.wd.goto(st.url.as_str()).await?;
-        st.wd
-            .screenshot(&st.ssp.join("screenshot-landing.png"))
-            .await?;
-        Ok(())
-    }
-}
+pub const STEPS: Steps = &[Step {
+    name: "Landing page",
+    desc: "Takes screenshot of the landing page of the appliance",
+    screenshot: "landing",
+    f: |st: &State| async { Ok(st.goto("/").await?) }.boxed(),
+}];

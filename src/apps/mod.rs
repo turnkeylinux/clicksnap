@@ -1,14 +1,16 @@
-use self::generic::GenericRunner;
-use color_eyre::eyre::WrapErr;
-use async_trait::async_trait;
+use self::generic::{GenStep, GEN_STEPS};
+use color_eyre::eyre::{Result, WrapErr};
+use futures::{future::BoxFuture, FutureExt};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use thirtyfour::prelude::*;
 use url::Url;
+
 mod asp_net_core;
 mod avideo;
 mod b2evolution;
 mod bagisto;
+mod bookstack;
 mod bugzilla;
 mod cakephp;
 mod canvas;
@@ -20,29 +22,29 @@ mod django;
 mod dokuwiki;
 mod drupal10;
 mod drupal7;
+mod example;
 mod fileserver;
 mod generic;
 mod gitea;
 mod joomla4;
 mod lamp;
 mod lapp;
+mod mantis;
+mod mattermost;
 mod nextcloud;
 mod nginx_php_fastcgi;
 mod nodejs;
 mod odoo;
 mod openvpn;
 mod orangehrm;
+mod oscommerce;
 mod owncloud;
+mod prestashop;
 mod rails;
 mod redmine;
 mod silverstripe;
 mod suitecrm;
 mod wordpress;
-mod prestashop;
-mod oscommerce;
-mod bookstack;
-mod mantis;
-mod mattermost;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -53,6 +55,7 @@ pub struct Preseeds {
 }
 
 pub struct State {
+    pub name: String,
     pub wd: WebDriver,
     pub act: Action,
     pub url: Url,
@@ -63,98 +66,232 @@ pub struct State {
 impl State {
     async fn wait(&self, sel: By) -> color_eyre::Result<WebElement> {
         let elt = self.wd.query(sel.clone()).first().await?;
-        elt.wait_until().displayed().await.wrap_err(format!("waiting for {:?} to be displayed", sel))?;
+        elt.wait_until()
+            .displayed()
+            .await
+            .wrap_err(format!("waiting for {:?} to be displayed", sel))?;
         Ok(elt)
     }
 
-    async fn sleep(&self, m: u64) -> () {
+    async fn sleep(&self, m: u64) {
         thirtyfour::support::sleep(std::time::Duration::from_millis(m)).await
-    } }
+    }
 
-// TODO install is pretty much unused for now
+    async fn goto(&self, path: &str) -> WebDriverResult<()> {
+        self.wd.goto(self.url.join(path)?).await
+    }
+
+    async fn goto_port(&self, port: u16, path: &str) -> WebDriverResult<()> {
+        let mut u = self.url.clone();
+        u.set_port(Some(port))
+            .map_err(|()| WebDriverError::CustomError("Failed setting port".to_string()))?;
+        self.wd.goto(u.join(path)?).await
+    }
+}
+
+type StepFn = fn(&State) -> BoxFuture<'_, color_eyre::Result<()>>;
+
+pub struct App {
+    pre: Steps,
+    test: Steps,
+    install: Steps,
+    post: Steps,
+    skip: &'static [GenStep],
+}
+
+impl App {
+    pub const fn default() -> Self {
+        Self {
+            pre: &[],
+            test: &[],
+            install: &[],
+            post: &[],
+            skip: &[],
+        }
+    }
+}
+
+impl Default for App {
+    fn default() -> Self {
+        App::default()
+    }
+}
+
+type Steps = &'static [Step];
+
+#[derive(Clone)]
+pub struct Step {
+    name: &'static str,
+    desc: &'static str,
+    screenshot: &'static str,
+
+    f: StepFn,
+}
+
+impl Step {
+    pub const fn default() -> Self {
+        Self {
+            name: "",
+            desc: "",
+            screenshot: "",
+            f: |_| async { Ok(()) }.boxed(),
+        }
+    }
+}
+
+impl Default for Step {
+    fn default() -> Self {
+        Self::default()
+    }
+}
+
+pub struct Runners(HashMap<&'static str, &'static App>);
+
+impl Default for Runners {
+    fn default() -> Self {
+        let mut h = HashMap::new();
+        h.insert("asp-net-core", &asp_net_core::APP);
+        h.insert("avideo", &avideo::APP);
+        h.insert("b2evolution", &b2evolution::APP);
+        h.insert("bagisto", &bagisto::APP);
+        h.insert("bugzilla", &bugzilla::APP);
+        h.insert("cakephp", &cakephp::APP);
+        h.insert("canvas", &canvas::APP);
+        h.insert("codeigniter", &codeigniter::APP);
+        h.insert("concrete-cms", &concrete_cms::APP);
+        h.insert("core", &core::APP);
+        h.insert("couchdb", &couchdb::APP);
+        h.insert("django", &django::APP);
+        h.insert("dokuwiki", &dokuwiki::APP);
+        h.insert("fileserver", &fileserver::APP);
+        h.insert("lamp", &lamp::APP);
+        h.insert("lapp", &lapp::APP);
+        h.insert("mysql", &lamp::APP);
+        h.insert("nginx-php-fastcgi", &nginx_php_fastcgi::APP);
+        h.insert("nodejs", &nodejs::APP);
+        h.insert("odoo", &odoo::APP);
+        h.insert("openvpn", &openvpn::APP);
+        h.insert("owncloud", &owncloud::APP);
+        h.insert("nextcloud", &nextcloud::APP);
+        h.insert("rails", &rails::APP);
+        h.insert("redmine", &redmine::APP);
+        h.insert("wordpress", &wordpress::APP);
+        h.insert("gitea", &gitea::APP);
+        h.insert("drupal7", &drupal7::APP);
+        h.insert("drupal10", &drupal10::APP);
+        h.insert("silverstripe", &silverstripe::APP);
+        h.insert("orangehrm", &orangehrm::APP);
+        h.insert("joomla4", &joomla4::APP);
+        h.insert("suitecrm", &suitecrm::APP);
+        h.insert("prestashop", &prestashop::APP);
+        h.insert("oscommerce", &oscommerce::APP);
+        h.insert("bookstack", &bookstack::APP);
+        h.insert("mantis", &mantis::APP);
+        h.insert("mattermost", &mattermost::APP);
+        Self(h)
+    }
+}
+
+impl Step {
+    pub async fn run(&self, st: &State) -> Result<()> {
+        (self.f)(st).await?;
+
+        let screenshot = if !self.screenshot.is_empty() {
+            format!("screenshot-{}.png", self.screenshot)
+        } else {
+            format!("screenshot-{}.png", self.name)
+        };
+
+        st.wd.screenshot(&st.ssp.join(screenshot)).await?;
+        Ok(())
+    }
+}
+
 pub enum Action {
     Test,
     Install,
 }
 
-// TODO hide some of these methods with type magic?
-#[async_trait]
-pub trait Runner {
-    // internal run function that contains the webdriver steps
-    // meant to be defined by appliance script
-    async fn exec(&self, st: &State) -> color_eyre::Result<()>;
-
-    async fn exec_full(&self, st: &State) -> color_eyre::Result<()> {
-        // generic runners should run for most/all appliances
-        GenericRunner::default().exec_full(st).await?;
-        self.exec(st).await
-    }
-
-    // run the scenario and manage the environment boilerplate
-    async fn run(&self, st: &State) -> color_eyre::Result<()> {
-        let r = self.exec_full(st).await;
-        let wd = st.wd.clone();
-        let _ = wd.quit().await;
-        r
-    }
-}
-
-type BoxRunner = Box<dyn Runner + Send + Sync>;
-type BoxRunnerMap = HashMap<&'static str, BoxRunner>;
-
-pub struct Runners(BoxRunnerMap);
-
-impl Default for Runners {
-    fn default() -> Self {
-        let mut h: BoxRunnerMap = HashMap::new();
-        h.insert("asp-net-core", Box::new(asp_net_core::T()));
-        h.insert("avideo", Box::new(avideo::T()));
-        h.insert("b2evolution", Box::new(b2evolution::T()));
-        h.insert("bagisto", Box::new(bagisto::T()));
-        h.insert("bugzilla", Box::new(bugzilla::T()));
-        h.insert("cakephp", Box::new(cakephp::T()));
-        h.insert("canvas", Box::new(canvas::T()));
-        h.insert("codeigniter", Box::new(codeigniter::T()));
-        h.insert("concrete-cms", Box::new(concrete_cms::T()));
-        h.insert("core", Box::new(core::T()));
-        h.insert("couchdb", Box::new(couchdb::T()));
-        h.insert("django", Box::new(django::T()));
-        h.insert("dokuwiki", Box::new(dokuwiki::T()));
-        h.insert("fileserver", Box::new(fileserver::T()));
-        h.insert("lamp", Box::new(lamp::T()));
-        h.insert("lapp", Box::new(lamp::T()));
-        h.insert("mysql", Box::new(lamp::T()));
-        h.insert("nginx-php-fastcgi", Box::new(nginx_php_fastcgi::T()));
-        h.insert("nodejs", Box::new(nodejs::T()));
-        h.insert("odoo", Box::new(odoo::T()));
-        h.insert("openvpn", Box::new(openvpn::T()));
-        h.insert("owncloud", Box::new(owncloud::T()));
-        h.insert("nextcloud", Box::new(nextcloud::T()));
-        h.insert("rails", Box::new(rails::T()));
-        h.insert("redmine", Box::new(redmine::T()));
-        h.insert("wordpress", Box::new(wordpress::T()));
-        h.insert("gitea", Box::new(gitea::T()));
-        h.insert("drupal7", Box::new(drupal7::T()));
-        h.insert("drupal10", Box::new(drupal10::T()));
-        h.insert("silverstripe", Box::new(silverstripe::T()));
-        h.insert("orangehrm", Box::new(orangehrm::T()));
-        h.insert("joomla4", Box::new(joomla4::T()));
-        h.insert("suitecrm", Box::new(suitecrm::T()));
-        h.insert("prestashop", Box::new(prestashop::T()));
-        h.insert("oscommerce", Box::new(oscommerce::T()));
-        h.insert("bookstack", Box::new(bookstack::T()));
-        h.insert("mantis", Box::new(mantis::T()));
-        h.insert("mattermost", Box::new(mattermost::T()));
-        Self(h)
-    }
-}
-
 impl Runners {
-    pub async fn run(&self, name: &str, st: &State) -> color_eyre::Result<()> {
+    async fn run_internal(&self, st: &State) -> color_eyre::Result<()> {
         let app = self
             .0
-            .get(name)
-            .ok_or(color_eyre::Report::msg(format!("Unknown app: '{name:?}'!")))?;
-        app.run(st).await
+            .get(st.name.as_str())
+            .ok_or(color_eyre::Report::msg(format!(
+                "Unknown app: '{:?}'!",
+                st.name
+            )))?;
+
+        println!("The default steps to be executed are:");
+
+        let def_steps: &[Step] = &GEN_STEPS
+            .iter()
+            .filter_map(|(n, s)| {
+                if app.skip.contains(n) {
+                    println!("- (skipped by this app) {:?}", n);
+                    None
+                } else {
+                    println!("- {:?}", n);
+                    Some(*s)
+                }
+            })
+            .flatten()
+            .cloned()
+            .collect::<Vec<Step>>();
+
+        println!("\nRunning steps for {}...", st.name);
+
+        fn stage_name(i: usize) -> &'static str {
+            match i {
+                1 => "Default generic runners",
+                2 => "Appliance pre action",
+                3 => "Appliance test/install",
+                4 => "Appliance post action",
+                _ => panic!("stage > 4 encountered!"),
+            }
+        }
+
+        for (i, steps) in [
+            def_steps,
+            app.pre,
+            (match st.act {
+                Action::Test => app.test,
+                Action::Install => app.install,
+            }),
+            app.post,
+        ]
+        .iter()
+        .enumerate()
+        .map(|(n, s)| (n + 1, s))
+        {
+            if steps.is_empty() {
+                println!(
+                    "  Skipping stage {} ({}): no steps defined for it",
+                    i,
+                    stage_name(i)
+                );
+                continue;
+            } else {
+                println!("  Running stage {} ({}) steps:", i, stage_name(i),);
+            }
+
+            if i > 1 {
+                // always start non-empty non-default step sequence at root url for convenience
+                st.goto("/").await?;
+            }
+
+            for (j, step) in steps.iter().enumerate().map(|(n, s)| (n + 1, s)) {
+                println!("    Running step {}.{}: {} {}", i, j, step.name, step.desc);
+                step.run(st).await?
+            }
+        }
+
+        Ok(())
+    }
+
+    pub async fn run(&self, st: State) -> color_eyre::Result<()> {
+        let o = self.run_internal(&st).await;
+        let _ = st.wd.clone().quit().await;
+        o
     }
 }
