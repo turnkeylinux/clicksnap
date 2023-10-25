@@ -46,6 +46,7 @@ mod silverstripe;
 mod suitecrm;
 mod wordpress;
 mod invoiceninja;
+mod phpbb;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -190,6 +191,7 @@ impl Default for Runners {
         h.insert("mantis", &mantis::APP);
         h.insert("mattermost", &mattermost::APP);
         h.insert("invoiceninja", &invoiceninja::APP);
+        h.insert("phpbb", &phpbb::APP);
         Self(h)
     }
 }
