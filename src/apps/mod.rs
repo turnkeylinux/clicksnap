@@ -40,6 +40,7 @@ mod orangehrm;
 mod oscommerce;
 mod owncloud;
 mod prestashop;
+mod ezplatform;
 mod rails;
 mod redmine;
 mod silverstripe;
@@ -186,6 +187,7 @@ impl Default for Runners {
         h.insert("joomla4", &joomla4::APP);
         h.insert("suitecrm", &suitecrm::APP);
         h.insert("prestashop", &prestashop::APP);
+        h.insert("ezplatform", &ezplatform::APP);
         h.insert("oscommerce", &oscommerce::APP);
         h.insert("bookstack", &bookstack::APP);
         h.insert("mantis", &mantis::APP);
