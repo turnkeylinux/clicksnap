@@ -8,7 +8,7 @@ pub const APP: App = App {
             name: "login",
             f: |st: &State| {
                 async {
-                    st.goto(st.url.join("index.php?route=account/login&language=en-gb")?.as_str()).await?;
+                    st.goto("index.php?route=account/login&language=en-gb").await?;
                     Ok(())
                 }
                 .boxed()
@@ -19,7 +19,7 @@ pub const APP: App = App {
             name: "admin-login",
             f: |st: &State| {
                 async {
-                    st.goto(st.url.join("turnkey_admin")?.as_str()).await?;
+                    st.goto("turnkey_admin").await?;
                     Ok(())
                 }
                 .boxed()
