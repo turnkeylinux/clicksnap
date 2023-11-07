@@ -31,6 +31,7 @@ mod lamp;
 mod lapp;
 mod mantis;
 mod mattermost;
+mod moodle;
 mod nextcloud;
 mod nginx_php_fastcgi;
 mod nodejs;
@@ -196,6 +197,7 @@ impl Default for Runners {
         h.insert("bookstack", &bookstack::APP);
         h.insert("mantis", &mantis::APP);
         h.insert("mattermost", &mattermost::APP);
+        h.insert("moodle", &moodle::APP);
         h.insert("invoiceninja", &invoiceninja::APP);
         h.insert("phpbb", &phpbb::APP);
         Self(h)
