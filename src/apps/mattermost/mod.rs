@@ -31,33 +31,35 @@ pub const APP: App = App {
             name: "dashboard",
             f: |st: &State| {
                 async {
-                    // I have no idea why this works and nothing else seems to ...
-                    // If you can fix it, please do
+                    let inp = st.wait(By::Id("input_loginId")).await?;
+                    inp.send_keys("admin\t").await?;
+                    let inp = st.wd.active_element().await?;
+                    inp.send_keys(&st.pse.app_pass).await?;
+                    inp.send_keys("\n").await?;
 
-                    let mut form_res = st.wd.form(By::Tag("form")).await;
-                    let mut count = 0;
-
-                    while let Ok(ref form) = form_res {
-                        if count >= 10 {
-                            break;
-                        }
-                        form.set_by_name("loginId", "admin").await?;
-                        form.set_by_name("password-input", &st.pse.app_pass).await?;
-                        st.wait(By::Id("saveSetting")).await?.click().await?;
-                        form_res = st.wd.form(By::Tag("form")).await;
-                        count += 1;
-                    }
-                    form_res?;
 
                     if let Ok(org_input) = st.wait(By::Css("input.Organization__input")).await {
+                        // navigating first launch config
                         org_input.send_keys("TurnkeyLinux").await?;
 
+                        let e1 = st.wait(By::Css("button.primary-button"))
+                            .await?;
+                        e1.click().await?;
+                        let e2 = st.wait(By::Css("button.plugins-skip-btn"))
+                            .await?;
+                        e2.click().await?;
+
+                        e1.wait_until().stale().await?;
+                        e2.wait_until().stale().await?;
                         st.wait(By::Css("button.primary-button"))
                             .await?
                             .click()
                             .await?;
                     }
                     st.wait(By::Id("channelHeaderTitle")).await?;
+                    if let Ok(el) = st.wait(By::Css("div#root > button")).await {
+                        el.click().await?;
+                    }
                     Ok(())
                 }
                 .boxed()
