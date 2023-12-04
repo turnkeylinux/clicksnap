@@ -12,6 +12,7 @@ pub const APP: App = App {
                     form.set_by_name("username", "admin").await?;
                     form.submit_direct().await?;
 
+                    st.wait(By::Id("login-form")).await?;
                     form = st.wd.form(By::Id("login-form")).await?;
                     form.set_by_name("password", &st.pse.app_pass).await?;
                     form.submit_direct().await?;
@@ -31,11 +32,6 @@ pub const APP: App = App {
             name: "manage-project",
             f: |st: &State| {
                 async {
-                    st.wd
-                        .form(By::Id("login-form"))
-                        .await?
-                        .submit_direct()
-                        .await?;
                     st.goto("manage_proj_page.php").await?;
                     Ok(())
                 }
