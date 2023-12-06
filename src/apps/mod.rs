@@ -30,6 +30,7 @@ mod joomla4;
 mod lamp;
 mod lapp;
 mod mantis;
+mod matomo;
 mod mattermost;
 mod moodle;
 mod nextcloud;
@@ -196,6 +197,7 @@ impl Default for Runners {
         h.insert("oscommerce", &oscommerce::APP);
         h.insert("bookstack", &bookstack::APP);
         h.insert("mantis", &mantis::APP);
+        h.insert("matomo", &matomo::APP);
         h.insert("mattermost", &mattermost::APP);
         h.insert("moodle", &moodle::APP);
         h.insert("invoiceninja", &invoiceninja::APP);
