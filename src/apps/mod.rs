@@ -29,6 +29,7 @@ mod gitea;
 mod joomla4;
 mod lamp;
 mod lapp;
+mod limesurvey;
 mod mantis;
 mod matomo;
 mod mattermost;
@@ -173,6 +174,7 @@ impl Default for Runners {
         h.insert("fileserver", &fileserver::APP);
         h.insert("lamp", &lamp::APP);
         h.insert("lapp", &lapp::APP);
+        h.insert("limesurvey", &limesurvey::APP);
         h.insert("mysql", &lamp::APP);
         h.insert("nginx-php-fastcgi", &nginx_php_fastcgi::APP);
         h.insert("nodejs", &nodejs::APP);
