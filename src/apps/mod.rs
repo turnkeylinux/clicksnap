@@ -40,6 +40,7 @@ mod nodejs;
 mod odoo;
 mod omeka;
 mod opencart;
+mod openldap;
 mod openvpn;
 mod orangehrm;
 mod oscommerce;
@@ -181,6 +182,7 @@ impl Default for Runners {
         h.insert("odoo", &odoo::APP);
         h.insert("omeka", &omeka::APP);
         h.insert("opencart", &opencart::APP);
+        h.insert("openldap", &openldap::APP);
         h.insert("openvpn", &openvpn::APP);
         h.insert("owncloud", &owncloud::APP);
         h.insert("nextcloud", &nextcloud::APP);
