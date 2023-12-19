@@ -28,7 +28,6 @@ pub const APP: App = App {
             f: |st: &State| {
                 async {
                     st.wd.form(By::Id("login-form")).await?.submit().await?;
-                    // st.wait(By::ClassName("dashlets")).await?;
                     st.goto("/#Admin").await?;
                     st.wait(By::ClassName("admin-content")).await?;
                     Ok(())
