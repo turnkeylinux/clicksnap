@@ -22,10 +22,13 @@ mod django;
 mod dokuwiki;
 mod drupal10;
 mod drupal7;
+mod espocrm;
 mod example;
+mod ezplatform;
 mod fileserver;
 mod generic;
 mod gitea;
+mod invoiceninja;
 mod joomla4;
 mod lamp;
 mod lapp;
@@ -45,15 +48,13 @@ mod openvpn;
 mod orangehrm;
 mod oscommerce;
 mod owncloud;
+mod phpbb;
 mod prestashop;
-mod ezplatform;
 mod rails;
 mod redmine;
 mod silverstripe;
 mod suitecrm;
 mod wordpress;
-mod invoiceninja;
-mod phpbb;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -172,6 +173,7 @@ impl Default for Runners {
         h.insert("couchdb", &couchdb::APP);
         h.insert("django", &django::APP);
         h.insert("dokuwiki", &dokuwiki::APP);
+        h.insert("espocrm", &espocrm::APP);
         h.insert("fileserver", &fileserver::APP);
         h.insert("lamp", &lamp::APP);
         h.insert("lapp", &lapp::APP);
