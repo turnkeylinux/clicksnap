@@ -23,9 +23,11 @@ mod dokuwiki;
 mod drupal10;
 mod drupal7;
 mod example;
+mod ezplatform;
 mod fileserver;
 mod generic;
 mod gitea;
+mod invoiceninja;
 mod joomla4;
 mod lamp;
 mod lapp;
@@ -33,6 +35,7 @@ mod limesurvey;
 mod mantis;
 mod matomo;
 mod mattermost;
+mod mediawiki;
 mod moodle;
 mod nextcloud;
 mod nginx_php_fastcgi;
@@ -45,15 +48,13 @@ mod openvpn;
 mod orangehrm;
 mod oscommerce;
 mod owncloud;
+mod phpbb;
 mod prestashop;
-mod ezplatform;
 mod rails;
 mod redmine;
 mod silverstripe;
 mod suitecrm;
 mod wordpress;
-mod invoiceninja;
-mod phpbb;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -176,6 +177,7 @@ impl Default for Runners {
         h.insert("lamp", &lamp::APP);
         h.insert("lapp", &lapp::APP);
         h.insert("limesurvey", &limesurvey::APP);
+        h.insert("mediawiki", &mediawiki::APP);
         h.insert("mysql", &lamp::APP);
         h.insert("nginx-php-fastcgi", &nginx_php_fastcgi::APP);
         h.insert("nodejs", &nodejs::APP);
