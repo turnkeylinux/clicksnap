@@ -55,6 +55,7 @@ mod rails;
 mod redmine;
 mod silverstripe;
 mod suitecrm;
+mod web2py;
 mod wordpress;
 
 pub struct Preseeds {
@@ -192,6 +193,7 @@ impl Default for Runners {
         h.insert("nextcloud", &nextcloud::APP);
         h.insert("rails", &rails::APP);
         h.insert("redmine", &redmine::APP);
+        h.insert("web2py", &web2py::APP);
         h.insert("wordpress", &wordpress::APP);
         h.insert("gitea", &gitea::APP);
         h.insert("drupal7", &drupal7::APP);
