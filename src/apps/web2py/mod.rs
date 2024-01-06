@@ -1,4 +1,4 @@
-use super::{App, GenStep, State, Step};
+use super::{App, State, Step};
 use futures::FutureExt;
 use thirtyfour::prelude::*;
 
