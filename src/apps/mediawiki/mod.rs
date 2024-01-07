@@ -24,7 +24,11 @@ pub const APP: App = App {
             f: |st: &State| {
                 async {
                     st.wd.form(By::Name("userlogin")).await?.submit().await?;
-                    st.wait(By::Name("skipReset")).await?.click().await?;
+                    // optional password form skip
+                    // it only gets displayed if the password is "weak"
+                    if let Ok(e) = st.wait(By::Name("skipReset")).await {
+                        e.click().await?
+                    }
                     st.wait(By::Id("t-whatlinkshere")).await?.click().await?;
                     Ok(())
                 }
