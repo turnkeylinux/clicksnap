@@ -22,6 +22,7 @@ mod django;
 mod dokuwiki;
 mod drupal10;
 mod drupal7;
+mod e107;
 mod espocrm;
 mod example;
 mod ezplatform;
@@ -175,6 +176,7 @@ impl Default for Runners {
         h.insert("couchdb", &couchdb::APP);
         h.insert("django", &django::APP);
         h.insert("dokuwiki", &dokuwiki::APP);
+        h.insert("e107", &e107::APP);
         h.insert("espocrm", &espocrm::APP);
         h.insert("fileserver", &fileserver::APP);
         h.insert("lamp", &lamp::APP);
