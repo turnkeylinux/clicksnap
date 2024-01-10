@@ -33,6 +33,7 @@ mod invoiceninja;
 mod joomla4;
 mod lamp;
 mod lapp;
+mod laravel;
 mod limesurvey;
 mod mantis;
 mod matomo;
@@ -181,6 +182,7 @@ impl Default for Runners {
         h.insert("fileserver", &fileserver::APP);
         h.insert("lamp", &lamp::APP);
         h.insert("lapp", &lapp::APP);
+        h.insert("laravel", &laravel::APP);
         h.insert("limesurvey", &limesurvey::APP);
         h.insert("mediawiki", &mediawiki::APP);
         h.insert("mysql", &lamp::APP);
