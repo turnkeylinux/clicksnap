@@ -29,7 +29,7 @@ mod ezplatform;
 mod fileserver;
 mod generic;
 mod gitea;
-mod invoiceninja;
+mod invoice_ninja;
 mod joomla4;
 mod lamp;
 mod lapp;
