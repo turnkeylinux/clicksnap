@@ -8,6 +8,7 @@ pub const APP: App = App {
             name: "create-project",
             f: |st: &State| {
                 async {
+                    st.wait(By::Id("login-form")).await?;
                     let mut form = st.wd.form(By::Id("login-form")).await?;
                     form.set_by_name("username", "admin").await?;
                     form.submit_direct().await?;
