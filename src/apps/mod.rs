@@ -38,6 +38,7 @@ mod mantis;
 mod matomo;
 mod mattermost;
 mod mediawiki;
+mod mibew;
 mod moodle;
 mod nextcloud;
 mod nginx_php_fastcgi;
@@ -183,6 +184,7 @@ impl Default for Runners {
         h.insert("lapp", &lapp::APP);
         h.insert("limesurvey", &limesurvey::APP);
         h.insert("mediawiki", &mediawiki::APP);
+        h.insert("mibew", &mibew::APP);
         h.insert("mysql", &lamp::APP);
         h.insert("nginx-php-fastcgi", &nginx_php_fastcgi::APP);
         h.insert("nodejs", &nodejs::APP);
