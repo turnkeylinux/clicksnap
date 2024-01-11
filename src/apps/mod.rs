@@ -53,6 +53,7 @@ mod orangehrm;
 mod oscommerce;
 mod owncloud;
 mod phpbb;
+mod phplist;
 mod prestashop;
 mod postgresql;
 mod rails;
@@ -209,6 +210,7 @@ impl Default for Runners {
         h.insert("orangehrm", &orangehrm::APP);
         h.insert("joomla4", &joomla4::APP);
         h.insert("suitecrm", &suitecrm::APP);
+        h.insert("phplist", &phplist::APP);
         h.insert("prestashop", &prestashop::APP);
         h.insert("postgresql", &postgresql::APP);
         h.insert("ezplatform", &ezplatform::APP);
