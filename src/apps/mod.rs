@@ -29,7 +29,7 @@ mod ezplatform;
 mod fileserver;
 mod generic;
 mod gitea;
-mod invoiceninja;
+mod invoice_ninja;
 mod joomla4;
 mod lamp;
 mod lapp;
@@ -218,7 +218,7 @@ impl Default for Runners {
         h.insert("matomo", &matomo::APP);
         h.insert("mattermost", &mattermost::APP);
         h.insert("moodle", &moodle::APP);
-        h.insert("invoiceninja", &invoiceninja::APP);
+        h.insert("invoice-ninja", &invoice_ninja::APP);
         h.insert("phpbb", &phpbb::APP);
         Self(h)
     }
