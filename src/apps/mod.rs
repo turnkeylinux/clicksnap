@@ -62,6 +62,7 @@ mod silverstripe;
 mod suitecrm;
 mod web2py;
 mod wordpress;
+mod zencart;
 
 pub struct Preseeds {
     pub root_pass: String,
@@ -222,6 +223,7 @@ impl Default for Runners {
         h.insert("moodle", &moodle::APP);
         h.insert("invoice-ninja", &invoice_ninja::APP);
         h.insert("phpbb", &phpbb::APP);
+        h.insert("zencart", &zencart::APP);
         Self(h)
     }
 }
