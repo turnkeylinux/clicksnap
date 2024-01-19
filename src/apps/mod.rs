@@ -41,6 +41,7 @@ mod oscommerce;
 mod owncloud;
 mod prestashop;
 mod ezplatform;
+mod typo3;
 mod rails;
 mod redmine;
 mod silverstripe;
@@ -186,6 +187,7 @@ impl Default for Runners {
         h.insert("suitecrm", &suitecrm::APP);
         h.insert("prestashop", &prestashop::APP);
         h.insert("ezplatform", &ezplatform::APP);
+        h.insert("typo3", &typo3::APP);
         h.insert("oscommerce", &oscommerce::APP);
         h.insert("bookstack", &bookstack::APP);
         h.insert("mantis", &mantis::APP);
