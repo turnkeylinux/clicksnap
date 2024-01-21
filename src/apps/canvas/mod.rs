@@ -87,7 +87,7 @@ pub const APP: App = App {
                         .await?
                         .click()
                         .await?;
-                    st.sleep(5000).async;
+                    st.sleep(5000).await;
                     Ok(())
                 }
                 .boxed()
@@ -95,6 +95,7 @@ pub const APP: App = App {
             ..Step::default()
         },
         Step {
+            // this step ensures that delayed_job script is working
             name: "theme-editor",
             f: |st: &State| {
                 async {
@@ -128,6 +129,7 @@ pub const APP: App = App {
             ..Step::default()
         },
         Step {
+            // ensures that Canvas RCE API is working
             name: "new-page",
             f: |st: &State| {
                 async {
@@ -146,7 +148,7 @@ pub const APP: App = App {
                         .await?
                         .click()
                         .await?;
-                    st.wait((By::LinkText("Pages")))
+                    st.wait(By::LinkText("Pages"))
                         .await?
                         .click()
                         .await?;
@@ -171,9 +173,8 @@ pub const APP: App = App {
                         .await?
                         .click()
                         .await?;
+                    // TODO: catch error and suggest running aux.sh
                     st.wait(By::XPath("//*[contains(text(),'No results.')]"))
-                        .await?
-                        .click()
                         .await?;
                     Ok(())
                 }
