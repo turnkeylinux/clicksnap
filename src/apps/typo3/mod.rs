@@ -27,7 +27,8 @@ pub const APP: App = App {
 
                     form.submit().await?;
 
-                    st.wait(By::Id("modulemenu")).await?;
+                    st.wait(By::LinkText("Dashboard")).await?.click().await?;
+                    st.sleep(1000).await;
                     Ok(())
                 }
                 .boxed()
