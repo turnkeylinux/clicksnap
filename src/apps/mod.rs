@@ -43,6 +43,7 @@ mod prestashop;
 mod ezplatform;
 mod typo3;
 mod rails;
+mod redis;
 mod redmine;
 mod silverstripe;
 mod suitecrm;
@@ -176,6 +177,7 @@ impl Default for Runners {
         h.insert("owncloud", &owncloud::APP);
         h.insert("nextcloud", &nextcloud::APP);
         h.insert("rails", &rails::APP);
+        h.insert("redis", &redis::APP);
         h.insert("redmine", &redmine::APP);
         h.insert("wordpress", &wordpress::APP);
         h.insert("gitea", &gitea::APP);
