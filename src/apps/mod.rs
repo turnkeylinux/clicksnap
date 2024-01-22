@@ -58,6 +58,7 @@ mod phplist;
 mod postgresql;
 mod prestashop;
 mod rails;
+mod redis;
 mod redmine;
 mod silverstripe;
 mod suitecrm;
@@ -204,6 +205,7 @@ impl Default for Runners {
         h.insert("owncloud", &owncloud::APP);
         h.insert("nextcloud", &nextcloud::APP);
         h.insert("rails", &rails::APP);
+        h.insert("redis", &redis::APP);
         h.insert("redmine", &redmine::APP);
         h.insert("web2py", &web2py::APP);
         h.insert("wordpress", &wordpress::APP);
