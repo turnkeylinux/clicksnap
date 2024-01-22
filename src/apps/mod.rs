@@ -61,6 +61,7 @@ mod rails;
 mod redmine;
 mod silverstripe;
 mod suitecrm;
+mod typo3;
 mod web2py;
 mod wordpress;
 mod zencart;
@@ -217,6 +218,7 @@ impl Default for Runners {
         h.insert("prestashop", &prestashop::APP);
         h.insert("postgresql", &postgresql::APP);
         h.insert("ezplatform", &ezplatform::APP);
+        h.insert("typo3", &typo3::APP);
         h.insert("oscommerce", &oscommerce::APP);
         h.insert("bookstack", &bookstack::APP);
         h.insert("mantis", &mantis::APP);
