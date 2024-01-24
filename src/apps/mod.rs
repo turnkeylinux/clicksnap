@@ -35,6 +35,7 @@ mod joomla4;
 mod lamp;
 mod lapp;
 mod laravel;
+mod lighttpd_php_fastcgi;
 mod limesurvey;
 mod mantis;
 mod matomo;
@@ -191,6 +192,7 @@ impl Default for Runners {
         h.insert("lamp", &lamp::APP);
         h.insert("lapp", &lapp::APP);
         h.insert("laravel", &laravel::APP);
+        h.insert("lighttpd-php-fastcgi", &lighttpd_php_fastcgi::APP);
         h.insert("limesurvey", &limesurvey::APP);
         h.insert("mediawiki", &mediawiki::APP);
         h.insert("mibew", &mibew::APP);
