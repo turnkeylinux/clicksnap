@@ -85,6 +85,11 @@ pub struct State {
     pub pse: Preseeds,
 }
 
+pub enum Action {
+    Test,
+    Install,
+}
+
 impl State {
     async fn wait(&self, sel: By) -> color_eyre::Result<WebElement> {
         let elt = self.wd.query(sel.clone()).first().await?;
@@ -158,6 +163,26 @@ impl Step {
             screenshot: "",
             f: |_| async { Ok(()) }.boxed(),
         }
+    }
+
+    pub async fn run(&self, st: &State) -> Result<()> {
+        let res = (self.f)(st).await;
+
+        let screenshot = if res.is_err() {
+            "screenshot-error.png".to_string()
+        } else if !self.screenshot.is_empty() {
+            format!("screenshot-{}.png", self.screenshot)
+        } else {
+            format!("screenshot-{}.png", self.name)
+        };
+
+        let scr_res = st.wd.screenshot(&st.ssp.join(screenshot)).await;
+        // see if step failed
+        res?;
+        // only if it didn't, see if screenshotting it failed
+        scr_res?;
+
+        Ok(())
     }
 }
 
@@ -234,26 +259,6 @@ impl Default for Runners {
         h.insert("zencart", &zencart::APP);
         Self(h)
     }
-}
-
-impl Step {
-    pub async fn run(&self, st: &State) -> Result<()> {
-        (self.f)(st).await?;
-
-        let screenshot = if !self.screenshot.is_empty() {
-            format!("screenshot-{}.png", self.screenshot)
-        } else {
-            format!("screenshot-{}.png", self.name)
-        };
-
-        st.wd.screenshot(&st.ssp.join(screenshot)).await?;
-        Ok(())
-    }
-}
-
-pub enum Action {
-    Test,
-    Install,
 }
 
 impl Runners {
