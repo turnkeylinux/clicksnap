@@ -43,9 +43,6 @@ pub const APP: App = App {
                         .await?
                         .click()
                         .await?;
-                    st.wd
-                        .screenshot(&st.ssp.join("screenshot-docs.png"))
-                        .await?;
                     Ok(())
                 }
                 .boxed()
