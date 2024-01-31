@@ -11,6 +11,7 @@ async fn main() -> color_eyre::Result<()> {
 
     // parse args
     let args: Vec<String> = env::args().collect();
+
     if args.len() != 4 {
         return Err(color_eyre::Report::msg(
             "usage: tkl-webtest <action: test|install> <appliance name> <root URL>",
@@ -26,12 +27,11 @@ async fn main() -> color_eyre::Result<()> {
     let name = args[2].to_string();
     let url = Url::parse(&args[3])?;
 
+    // setup webdriver
     let mut caps = DesiredCapabilities::chrome();
     caps.accept_insecure_certs(true)?;
-    let wdurl = match env::var("TKL_WEBDRIVER_URL") {
-        Ok(s) => s,
-        Err(_) => "http://localhost:4444/".to_string(),
-    };
+
+    let wdurl = env::var("TKL_WEBDRIVER_URL").unwrap_or("http://localhost:4444/".to_owned());
 
     let wd: WebDriverResult<WebDriver> = WebDriver::new(&wdurl, caps).await;
 
@@ -41,6 +41,7 @@ async fn main() -> color_eyre::Result<()> {
     let wd_connect_timeout: f32 = env::var("WEBDRIVER_CONNECT_TIMEOUT")
         .unwrap_or("1".to_owned())
         .parse()?;
+
     for _ in 0..wd_connect_attempts {
         if wd.is_ok() {
             break;
@@ -52,27 +53,16 @@ async fn main() -> color_eyre::Result<()> {
 
     // x + 8, y + 126 to account for window decorations/borders
     wd.set_window_rect(0, 0, 1366 + 8, 768 + 126).await?;
-    let scrpath = match env::var("TKL_SCREENSHOT_PATH") {
-        Ok(s) => s,
-        Err(_) => "/tmp".to_string(),
-    };
+    let scrpath = env::var("TKL_SCREENSHOT_PATH").unwrap_or("/tmp".to_owned());
 
-    let preseeds = Preseeds {
-        root_pass: env::var("ROOT_PASS").unwrap_or("turnkey".to_owned()),
-        db_pass: env::var("DB_PASS").unwrap_or("turnkey".to_owned()),
-        app_pass: env::var("APP_PASS").unwrap_or("turnkey".to_owned()),
-        app_email: env::var("APP_EMAIL").unwrap_or("admin@example.com".to_owned()),
-        app_domain: env::var("APP_DOMAIN").unwrap_or("example.com".to_owned()),
-    };
-
-    Runners::default()
+    Runners::new()
         .run(State {
             name,
             wd,
             act,
             url,
             ssp: PathBuf::from(&scrpath),
-            pse: preseeds,
+            pse: Default::default(),
         })
         .await
 }
