@@ -1,10 +1,9 @@
-use super::{generic::adminer, App, State, Step};
+use super::{App, State, Step};
 use color_eyre::eyre::eyre;
 use futures::FutureExt;
 use thirtyfour::prelude::*;
 
 pub const APP: App = App {
-    pre: adminer::STEPS_MY,
     test: &[
         Step {
             name: "new-pad",
