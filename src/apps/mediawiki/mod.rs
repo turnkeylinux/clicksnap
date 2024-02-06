@@ -9,7 +9,9 @@ pub const APP: App = App {
             f: |st: &State| {
                 async {
                     st.goto("/").await?;
-                    st.wait(By::Id("pt-login")).await?.click().await?;
+
+                    st.wait(By::XPath("//a[.='Log in']")).await?.click().await?;
+
                     let form = st.wd.form(By::Name("userlogin")).await?;
                     form.set_by_name("wpName", "admin").await?;
                     form.set_by_name("wpPassword", &st.pse.app_pass).await?;
