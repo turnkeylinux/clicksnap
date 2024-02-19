@@ -18,7 +18,7 @@ pub const APP: App = App {
                         .await?;
                     st.wait(By::Id("signinPassword"))
                         .await?
-                        .send_keys("Kappa123")
+                        .send_keys(&st.pse.app_pass)
                         .await?;
                     st.wait(By::Id("signinButton")).await?.click().await?;
                     st.wait(By::Id("R:localhost:6379:0_anchor"))
