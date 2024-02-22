@@ -59,6 +59,7 @@ mod phpbb;
 mod phplist;
 mod postgresql;
 mod prestashop;
+mod processwire;
 mod rails;
 mod redis;
 mod redmine;
@@ -281,6 +282,7 @@ impl Runners {
         h.insert("phplist", &phplist::APP);
         h.insert("postgresql", &postgresql::APP);
         h.insert("prestashop", &prestashop::APP);
+        h.insert("processwire", &processwire::APP);
         h.insert("rails", &rails::APP);
         h.insert("redis", &redis::APP);
         h.insert("redmine", &redmine::APP);
