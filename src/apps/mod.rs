@@ -8,6 +8,7 @@ use thirtyfour::prelude::*;
 use url::Url;
 
 mod asp_net_core;
+mod gitlab;
 mod avideo;
 mod b2evolution;
 mod bagisto;
@@ -252,6 +253,7 @@ impl Runners {
         h.insert("ezplatform", &ezplatform::APP);
         h.insert("fileserver", &fileserver::APP);
         h.insert("gitea", &gitea::APP);
+        h.insert("gitlab", &gitlab::APP);
         h.insert("invoice-ninja", &invoice_ninja::APP);
         h.insert("joomla4", &joomla4::APP);
         h.insert("lamp", &lamp::APP);
