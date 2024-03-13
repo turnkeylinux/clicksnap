@@ -68,6 +68,7 @@ mod redmine;
 mod silverstripe;
 mod simplemachines;
 mod suitecrm;
+mod tracks;
 mod typo3;
 mod web2py;
 mod wordpress;
@@ -293,6 +294,7 @@ impl Runners {
         h.insert("silverstripe", &silverstripe::APP);
         h.insert("simplemachines", &simplemachines::APP);
         h.insert("suitecrm", &suitecrm::APP);
+        h.insert("tracks", &tracks::APP);
         h.insert("typo3", &typo3::APP);
         h.insert("web2py", &web2py::APP);
         h.insert("wordpress", &wordpress::APP);
