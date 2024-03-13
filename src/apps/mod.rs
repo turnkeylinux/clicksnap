@@ -57,6 +57,7 @@ mod openldap;
 mod openvpn;
 mod orangehrm;
 mod oscommerce;
+mod otrs;
 mod owncloud;
 mod phpbb;
 mod phplist;
@@ -284,6 +285,7 @@ impl Runners {
         h.insert("openvpn", &openvpn::APP);
         h.insert("orangehrm", &orangehrm::APP);
         h.insert("oscommerce", &oscommerce::APP);
+        h.insert("otrs", &otrs::APP);
         h.insert("owncloud", &owncloud::APP);
         h.insert("phpbb", &phpbb::APP);
         h.insert("phplist", &phplist::APP);
