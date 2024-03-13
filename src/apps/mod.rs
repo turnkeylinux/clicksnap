@@ -25,6 +25,7 @@ mod dokuwiki;
 mod drupal10;
 mod drupal7;
 mod e107;
+mod elgg;
 mod espocrm;
 mod etherpad;
 mod example;
@@ -254,6 +255,7 @@ impl Runners {
         h.insert("drupal10", &drupal10::APP);
         h.insert("drupal7", &drupal7::APP);
         h.insert("e107", &e107::APP);
+        h.insert("elgg", &elgg::APP);
         h.insert("espocrm", &espocrm::APP);
         h.insert("etherpad", &etherpad::APP);
         h.insert("ezplatform", &ezplatform::APP);
