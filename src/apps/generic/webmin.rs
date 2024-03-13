@@ -49,7 +49,7 @@ pub const STEPS: Steps = &[
         },
         ..Step::default()
     },
-    Step {
+    /*Step {
         name: "webmin-terminal",
         f: |st: &State| {
             async {
@@ -68,5 +68,5 @@ pub const STEPS: Steps = &[
             .boxed()
         },
         ..Step::default()
-    },
+    },*/
 ];
