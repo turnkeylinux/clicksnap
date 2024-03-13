@@ -29,6 +29,7 @@ mod etherpad;
 mod example;
 mod ezplatform;
 mod fileserver;
+mod foswiki;
 mod gallery;
 mod generic;
 mod gitea;
@@ -252,6 +253,7 @@ impl Runners {
         h.insert("etherpad", &etherpad::APP);
         h.insert("ezplatform", &ezplatform::APP);
         h.insert("fileserver", &fileserver::APP);
+        h.insert("foswiki", &foswiki::APP)
         h.insert("gallery", &gallery::APP);
         h.insert("gitea", &gitea::APP);
         h.insert("invoice-ninja", &invoice_ninja::APP);
