@@ -260,7 +260,7 @@ impl Runners {
         h.insert("etherpad", &etherpad::APP);
         h.insert("ezplatform", &ezplatform::APP);
         h.insert("fileserver", &fileserver::APP);
-        h.insert("foswiki", &foswiki::APP)
+        h.insert("foswiki", &foswiki::APP);
         h.insert("gallery", &gallery::APP);
         h.insert("gitea", &gitea::APP);
         h.insert("gitlab", &gitlab::APP);
