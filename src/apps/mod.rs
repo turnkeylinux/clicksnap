@@ -78,6 +78,7 @@ mod typo3;
 mod web2py;
 mod wordpress;
 mod xoops;
+mod yiiframework;
 mod zencart;
 
 /// Custom values to use for the appliance inithook variables
@@ -309,6 +310,7 @@ impl Runners {
         h.insert("web2py", &web2py::APP);
         h.insert("wordpress", &wordpress::APP);
         h.insert("xoops", &xoops::APP);
+        h.insert("yiiframework", &yiiframework::APP);
         h.insert("zencart", &zencart::APP);
         Self(h)
     }
