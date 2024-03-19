@@ -23,6 +23,7 @@ pub const APP: App = App {
                 .boxed()
             },
             ..Step::default()
+	},
 	Step {
             name: "system",
             f: |st: &State| {
