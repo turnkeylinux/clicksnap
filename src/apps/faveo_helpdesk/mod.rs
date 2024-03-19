@@ -23,17 +23,6 @@ pub const APP: App = App {
                 .boxed()
             },
             ..Step::default()
-        },
-        Step {
-            name: "diskusage",
-            f: |st: &State| {
-                async {
-                    Ok(())
-                }
-                .boxed()
-            },
-            ..Step::default()
-        },
 	Step {
             name: "system",
             f: |st: &State| {
