@@ -30,6 +30,7 @@ mod etherpad;
 mod example;
 mod ezplatform;
 mod fileserver;
+mod faveo_helpdesk;
 mod foswiki;
 mod gallery;
 mod generic;
@@ -261,6 +262,7 @@ impl Runners {
         h.insert("espocrm", &espocrm::APP);
         h.insert("etherpad", &etherpad::APP);
         h.insert("ezplatform", &ezplatform::APP);
+        h.insert("faveo_helpdesk", &faveo_helpdesk::APP);
         h.insert("fileserver", &fileserver::APP);
         h.insert("foswiki", &foswiki::APP);
         h.insert("gallery", &gallery::APP);
