@@ -5,7 +5,7 @@ use thirtyfour::prelude::*;
 pub const APP: App = App {
     test: &[
         Step {
-            name: "login",
+            name: "admin",
             f: |st: &State| {
                 async {
                     st.goto("/").await?;
@@ -21,26 +21,7 @@ pub const APP: App = App {
                         .send_keys(&*st.pse.app_pass)
                         .await?;
                     st.wait(By::Id("log_in_top")).await?.click().await?;
-                    st.wait(By::Id("Bugzilla_login"))
-                        .await?
-                        .send_keys(&st.pse.app_email)
-                        .await?;
-                    st.wait(By::Id("Bugzilla_password"))
-                        .await?
-                        .send_keys(&*st.pse.app_pass)
-                        .await?;
-                    Ok(())
-                }
-                .boxed()
-            },
-            ..Step::default()
-        },
-        Step {
-            name: "admin",
-            f: |st: &State| {
-                async {
-                    st.wait(By::Id("log_in")).await?.click().await?;
-                    st.wait(By::XPath("//a[text() = 'Administration']"))
+                    st.wait(By::LinkText("Administration"))
                         .await?
                         .click()
                         .await?;
