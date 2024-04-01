@@ -7,6 +7,7 @@ use std::path::PathBuf;
 use thirtyfour::prelude::*;
 use url::Url;
 
+mod ansible;
 mod asp_net_core;
 mod avideo;
 mod b2evolution;
@@ -244,6 +245,7 @@ pub struct Runners(HashMap<&'static str, &'static App>);
 impl Runners {
     pub fn new() -> Runners {
         let mut h = HashMap::new();
+        h.insert("ansible", &ansible::APP);
         h.insert("asp-net-core", &asp_net_core::APP);
         h.insert("avideo", &avideo::APP);
         h.insert("b2evolution", &b2evolution::APP);
