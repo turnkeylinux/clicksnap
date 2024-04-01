@@ -45,6 +45,7 @@ mod lapp;
 mod laravel;
 mod lighttpd_php_fastcgi;
 mod limesurvey;
+mod mahara;
 mod mantis;
 mod matomo;
 mod mattermost;
@@ -281,6 +282,7 @@ impl Runners {
         h.insert("laravel", &laravel::APP);
         h.insert("lighttpd-php-fastcgi", &lighttpd_php_fastcgi::APP);
         h.insert("limesurvey", &limesurvey::APP);
+        h.insert("mahara", &mahara::APP);
         h.insert("mantis", &mantis::APP);
         h.insert("matomo", &matomo::APP);
         h.insert("mattermost", &mattermost::APP);
