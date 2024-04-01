@@ -53,6 +53,7 @@ mod moodle;
 mod nextcloud;
 mod nginx_php_fastcgi;
 mod nodejs;
+mod observium;
 mod odoo;
 mod omeka;
 mod opencart;
@@ -288,6 +289,7 @@ impl Runners {
         h.insert("nextcloud", &nextcloud::APP);
         h.insert("nginx-php-fastcgi", &nginx_php_fastcgi::APP);
         h.insert("nodejs", &nodejs::APP);
+        h.insert("observium", &observium::APP);
         h.insert("odoo", &odoo::APP);
         h.insert("omeka", &omeka::APP);
         h.insert("opencart", &opencart::APP);
