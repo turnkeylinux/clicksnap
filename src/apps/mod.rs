@@ -70,6 +70,7 @@ mod processwire;
 mod rails;
 mod redis;
 mod redmine;
+mod roundup;
 mod silverstripe;
 mod simplemachines;
 mod suitecrm;
@@ -304,6 +305,7 @@ impl Runners {
         h.insert("rails", &rails::APP);
         h.insert("redis", &redis::APP);
         h.insert("redmine", &redmine::APP);
+        h.insert("roundup", &roundup::APP);
         h.insert("silverstripe", &silverstripe::APP);
         h.insert("simplemachines", &simplemachines::APP);
         h.insert("suitecrm", &suitecrm::APP);
