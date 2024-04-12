@@ -52,6 +52,7 @@ mod mattermost;
 mod mediawiki;
 mod mibew;
 mod moodle;
+mod mumble;
 mod nextcloud;
 mod nginx_php_fastcgi;
 mod nodejs;
@@ -289,6 +290,7 @@ impl Runners {
         h.insert("mediawiki", &mediawiki::APP);
         h.insert("mibew", &mibew::APP);
         h.insert("moodle", &moodle::APP);
+        h.insert("mumble", &mumble::APP);
         h.insert("mysql", &lamp::APP);
         h.insert("nextcloud", &nextcloud::APP);
         h.insert("nginx-php-fastcgi", &nginx_php_fastcgi::APP);
