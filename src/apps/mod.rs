@@ -269,7 +269,7 @@ impl Runners {
         h.insert("espocrm", &espocrm::APP);
         h.insert("etherpad", &etherpad::APP);
         h.insert("ezplatform", &ezplatform::APP);
-        h.insert("faveo_helpdesk", &faveo_helpdesk::APP);
+        h.insert("faveo-helpdesk", &faveo_helpdesk::APP);
         h.insert("fileserver", &fileserver::APP);
         h.insert("foswiki", &foswiki::APP);
         h.insert("gallery", &gallery::APP);
