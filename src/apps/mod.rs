@@ -34,6 +34,7 @@ mod faveo_helpdesk;
 mod fileserver;
 mod foswiki;
 mod gallery;
+mod gameserver;
 mod generic;
 mod gitea;
 mod gitlab;
@@ -275,6 +276,7 @@ impl Runners {
         h.insert("fileserver", &fileserver::APP);
         h.insert("foswiki", &foswiki::APP);
         h.insert("gallery", &gallery::APP);
+        h.insert("gameserver", &gameserver::APP);
         h.insert("gitea", &gitea::APP);
         h.insert("gitlab", &gitlab::APP);
         h.insert("icescrum", &icescrum::APP);
