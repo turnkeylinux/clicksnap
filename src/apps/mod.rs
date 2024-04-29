@@ -326,6 +326,7 @@ impl Runners {
         h.insert("syncthing", &syncthing::APP);
         h.insert("symfony", &symfony::APP);
         h.insert("tomcat", &tomcat::APP);
+        h.insert("tomcat-apache", &tomcat::APP);
         h.insert("tracks", &tracks::APP);
         h.insert("typo3", &typo3::APP);
         h.insert("ushahidi", &ushahidi::APP);
