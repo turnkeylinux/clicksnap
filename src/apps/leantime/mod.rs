@@ -9,40 +9,48 @@ pub const APP: App = App {
             f: |st: &State| {
                 {
                     async {
+                        // sometimes login redirects wrong? We just retry and hopefully it works
                         let form = st.wd.form(By::Id("login")).await?;
                         form.set_by_name("username", &st.pse.app_email).await?;
                         form.set_by_name("password", &st.pse.app_pass).await?;
-                        form.submit().await?;
+                        form.submit_direct().await?;
 
-                        st.wait(By::Css("div.nyroModalCont")).await?;
+                        if let Ok(_) = st.wait(By::Css("div.nyroModalCont")).await {
+                            // sometimes the onboarding form doesn't appear?!
+                            let form = st.wd.form(By::Css("form.onboardingModal")).await?;
+                            form.set_by_name("projectname", "TurnkeyLinux Example")
+                                .await?;
+                            form.submit().await?;
 
-                        let form = st.wd.form(By::Css("form.step1")).await?;
-                        form.set_by_name("projectname", "TurnkeyLinux Example")
-                            .await?;
-                        form.submit().await?;
+                            st.wait(By::Css("div.nyroModalCont")).await?;
 
-                        st.wait(By::Css("div.nyroModalCont")).await?;
+                            st.wd
+                                .form(By::Css("form.onboardingModal"))
+                                .await?
+                                .submit()
+                                .await?;
 
-                        st.wd.form(By::Css("form.step2")).await?.submit().await?;
+                            st.wait(By::Css("div.nyroModalCont")).await?;
 
-                        st.wait(By::Css("div.nyroModalCont")).await?;
+                            st.wd
+                                .form(By::Css("form.onboardingModal"))
+                                .await?
+                                .submit()
+                                .await?;
 
-                        st.wd.form(By::Css("form.step2")).await?.submit().await?;
-
-                        let mut res = st.wait(By::Css("div.nyroModalCont")).await;
-                        for _ in 0..10 {
-                            res = st.wait(By::Css("div.nyroModalCont")).await;
-
-                            if let Ok(_) = res {
-                                break;
+                            // sometimes this modal doesn't appear either?!
+                            for _ in 0..10 {
+                                if st.wait(By::Css("div.nyroModalCont")).await.is_ok() {
+                                    break;
+                                }
+                            }
+                            if st.wait(By::Css("div.nyroModalCont")).await.is_ok() {
+                                st.wait(By::LinkText("Skip and don't show this page again"))
+                                    .await?
+                                    .click()
+                                    .await?;
                             }
                         }
-                        res?;
-
-                        st.wait(By::LinkText("Skip and don't show this page again"))
-                            .await?
-                            .click()
-                            .await?;
 
                         Ok(())
                     }
@@ -57,17 +65,12 @@ pub const APP: App = App {
                 {
                     async {
                         st.goto("dashboard/show").await?;
-                        let mut res = st.wait(By::Css("div.nyroModalCont")).await;
                         for _ in 0..10 {
-                            res = st.wait(By::Css("div.nyroModalCont")).await;
-
-                            if let Ok(_) = res {
+                            if st.wait(By::Css("div.nyroModalCont")).await.is_ok() {
                                 break;
                             }
                         }
-                        res?;
-
-                        st.wait(By::LinkText("Close and don't show this screen again"))
+                        st.wait(By::Css("div.nyroModalCont a.btn-primary"))
                             .await?
                             .click()
                             .await?;
