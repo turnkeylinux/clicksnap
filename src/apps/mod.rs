@@ -91,6 +91,7 @@ mod wordpress;
 mod xoops;
 mod yiiframework;
 mod zencart;
+mod zoneminder;
 
 /// Custom values to use for the appliance inithook variables
 pub struct Preseeds {
@@ -335,6 +336,7 @@ impl Runners {
         h.insert("xoops", &xoops::APP);
         h.insert("yiiframework", &yiiframework::APP);
         h.insert("zencart", &zencart::APP);
+        h.insert("zoneminder", &zoneminder::APP);
         Self(h)
     }
 
