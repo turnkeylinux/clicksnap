@@ -24,22 +24,36 @@ pub const APP: App = App {
             ..Step::default()
         },
         Step {
-            name: "diskusage",
+            name: "settings",
             f: |st: &State| {
                 async {
-                    // the following elements are difficult to find other than by XPath
-                    // "Disk Usage" menu button
-                    st.wait(By::XPath("/html/body/div[2]/div[3]/ul[1]/li[3]/div"))
+                    st.wait(By::Css("ul#prefs > li.settings"))
                         .await?
                         .click()
                         .await?;
-                    // "Treemap" button
-                    st.wait(By::XPath("/html/body/div[14]/div[2]/div[4]/h3/span"))
+                    st.wait(By::Css("div.ui-dialog.search"))
+                        .await?
+                        .wait_until()
+                        .displayed()
+                        .await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
+        Step {
+            name: "search",
+            f: |st: &State| {
+                async {
+                    st.wait(By::XPath("//button[@title='Close']"))
                         .await?
                         .click()
                         .await?;
-                    // actual treemap element
-                    st.wait(By::ClassName("treemappanel")).await?;
+                    st.wait(By::Css("ul#apps > li.search"))
+                        .await?
+                        .click()
+                        .await?;
                     Ok(())
                 }
                 .boxed()
