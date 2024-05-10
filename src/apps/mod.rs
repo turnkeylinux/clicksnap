@@ -51,6 +51,7 @@ mod mahara;
 mod mantis;
 mod matomo;
 mod mattermost;
+mod mediaserver;
 mod mediawiki;
 mod mibew;
 mod moodle;
@@ -294,6 +295,7 @@ impl Runners {
         h.insert("mantis", &mantis::APP);
         h.insert("matomo", &matomo::APP);
         h.insert("mattermost", &mattermost::APP);
+        h.insert("mediaserver", &mediaserver::APP);
         h.insert("mediawiki", &mediawiki::APP);
         h.insert("mibew", &mibew::APP);
         h.insert("moodle", &moodle::APP);
