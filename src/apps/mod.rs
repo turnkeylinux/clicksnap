@@ -80,6 +80,7 @@ mod redmine;
 mod roundup;
 mod silverstripe;
 mod simplemachines;
+mod snipe_it;
 mod suitecrm;
 mod symfony;
 mod syncthing;
@@ -325,6 +326,7 @@ impl Runners {
         h.insert("roundup", &roundup::APP);
         h.insert("silverstripe", &silverstripe::APP);
         h.insert("simplemachines", &simplemachines::APP);
+        h.insert("snipe-it", &snipe_it::APP);
         h.insert("suitecrm", &suitecrm::APP);
         h.insert("syncthing", &syncthing::APP);
         h.insert("symfony", &symfony::APP);
