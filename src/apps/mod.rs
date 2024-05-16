@@ -342,6 +342,12 @@ impl Runners {
         Self(h)
     }
 
+    pub fn list(&self) {
+        for (app, _) in &self.0 {
+            println!("{}", app);
+        }
+    }
+
     async fn try_run(&self, st: &State) -> Result<()> {
         let app = self
             .0
