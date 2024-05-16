@@ -12,7 +12,17 @@ async fn main() -> color_eyre::Result<()> {
     // parse args
     let args: Vec<String> = env::args().collect();
 
-    if args.len() != 4 {
+    if args.len() < 2 {
+        return Err(color_eyre::Report::msg(
+            "usage: tkl-webtest <action: test|install> <appliance name> <root URL>
+usage: tkl-webtest list",
+        ));
+    }
+
+    if args[1] == "list" {
+        Runners::new().list();
+        return Ok(());
+    } else if args.len() != 4 {
         return Err(color_eyre::Report::msg(
             "usage: tkl-webtest <action: test|install> <appliance name> <root URL>",
         ));
