@@ -82,6 +82,7 @@ mod simplemachines;
 mod suitecrm;
 mod symfony;
 mod syncthing;
+mod torrentserver;
 mod tracks;
 mod typo3;
 mod ushahidi;
@@ -322,8 +323,9 @@ impl Runners {
         h.insert("silverstripe", &silverstripe::APP);
         h.insert("simplemachines", &simplemachines::APP);
         h.insert("suitecrm", &suitecrm::APP);
-        h.insert("syncthing", &syncthing::APP);
         h.insert("symfony", &symfony::APP);
+        h.insert("syncthing", &syncthing::APP);
+        h.insert("torrentserver", &torrentserver::APP);
         h.insert("tracks", &tracks::APP);
         h.insert("typo3", &typo3::APP);
         h.insert("ushahidi", &ushahidi::APP);
