@@ -40,6 +40,7 @@ mod gitea;
 mod gitlab;
 mod icescrum;
 mod invoice_ninja;
+mod jenkins;
 mod joomla4;
 mod lamp;
 mod lapp;
@@ -281,6 +282,7 @@ impl Runners {
         h.insert("gitlab", &gitlab::APP);
         h.insert("icescrum", &icescrum::APP);
         h.insert("invoice-ninja", &invoice_ninja::APP);
+        h.insert("jenkins", &jenkins::APP);
         h.insert("joomla4", &joomla4::APP);
         h.insert("lamp", &lamp::APP);
         h.insert("lapp", &lapp::APP);
