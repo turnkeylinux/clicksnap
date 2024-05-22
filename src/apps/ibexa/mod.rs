@@ -20,10 +20,13 @@ pub const APP: App = App {
             f: |st: &State| {
                 async {
                     st.wait(By::ClassName("ez-login__actions-wrapper")).await?;
-                    let form = st.wd.form(By::ClassName("ez-login__actions-wrapper")).await?;
+                    let form = st
+                        .wd
+                        .form(By::ClassName("ez-login__actions-wrapper"))
+                        .await?;
 
                     form.set_by_name("_username", "admin").await?;
-                    form.set_by_name("_password", "publish").await?;
+                    form.set_by_name("_password", &st.pse.app_pass).await?;
 
                     form.submit().await?;
 
