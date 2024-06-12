@@ -31,7 +31,7 @@ pub const APP: App = App {
                         .await?
                         .click()
                         .await?;
-                    st.wait(By::Css("div.ui-dialog.search"))
+                    st.wait(By::Css("div.ui-dialog.settingsdialog"))
                         .await?
                         .wait_until()
                         .displayed()
@@ -53,6 +53,11 @@ pub const APP: App = App {
                     st.wait(By::Css("ul#apps > li.search"))
                         .await?
                         .click()
+                        .await?;
+                    st.wait(By::Css("div.ui-dialog.search"))
+                        .await?
+                        .wait_until()
+                        .displayed()
                         .await?;
                     Ok(())
                 }
