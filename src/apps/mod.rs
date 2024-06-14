@@ -22,6 +22,7 @@ mod core;
 mod couchdb;
 mod django;
 mod dokuwiki;
+mod domain_controller;
 mod drupal10;
 mod drupal7;
 mod e107;
@@ -271,6 +272,7 @@ impl Runners {
         h.insert("couchdb", &couchdb::APP);
         h.insert("django", &django::APP);
         h.insert("dokuwiki", &dokuwiki::APP);
+        h.insert("domain-controller", &domain_controller::APP);
         h.insert("drupal10", &drupal10::APP);
         h.insert("drupal7", &drupal7::APP);
         h.insert("e107", &e107::APP);
