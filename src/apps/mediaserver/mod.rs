@@ -69,6 +69,14 @@ pub const APP: App = App {
                     u.set_port(Some(12322))
                         .map_err(|()| eyre!("url set error"))?;
                     st.wd.goto(u.as_str()).await?;
+
+                    for i in 0..10 {
+                        if let Ok(_) = st.wait(By::Tag("form")).await {
+                            break;
+                        }
+                    }
+                    st.wait(By::Tag("form")).await?;
+
                     Ok(())
                 }
                 .boxed()
