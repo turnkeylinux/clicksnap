@@ -1,5 +1,5 @@
 use super::{App, State, Step};
-use color_eyre::eyre::eyre;
+
 use futures::FutureExt;
 use thirtyfour::prelude::*;
 
