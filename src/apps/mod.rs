@@ -43,6 +43,7 @@ mod icescrum;
 mod invoice_ninja;
 mod jenkins;
 mod joomla4;
+mod joomla5;
 mod lamp;
 mod lapp;
 mod laravel;
@@ -291,6 +292,7 @@ impl Runners {
         h.insert("invoice-ninja", &invoice_ninja::APP);
         h.insert("jenkins", &jenkins::APP);
         h.insert("joomla4", &joomla4::APP);
+        h.insert("joomla5", &joomla5::APP);
         h.insert("lamp", &lamp::APP);
         h.insert("lapp", &lapp::APP);
         h.insert("laravel", &laravel::APP);
