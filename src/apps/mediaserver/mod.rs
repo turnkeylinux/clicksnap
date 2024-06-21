@@ -70,7 +70,7 @@ pub const APP: App = App {
                         .map_err(|()| eyre!("url set error"))?;
                     st.wd.goto(u.as_str()).await?;
 
-                    for i in 0..10 {
+                    for _i in 0..10 {
                         if let Ok(_) = st.wait(By::Tag("form")).await {
                             break;
                         }
