@@ -28,10 +28,26 @@ pub const APP: App = App {
                     form.submit_direct().await?;
                     st.sleep(1000).await; // waiting for redirect
 
-                    // popup occurs on first login, we try and get rid of it if it's there
-                    if let Ok(elem) = st.wd.find(By::Css(".modal-container__close")).await {
-                        elem.click().await?;
-                        st.sleep(200).await; // waiting for redirect
+                    // popup occurs on first login, we try and get rid of it
+                    for _ in 0..10 {
+                        if st
+                            .wait(By::Css(
+                                "button.button-vue--vue-primary.button-vue--icon-only",
+                            ))
+                            .await
+                            .is_ok()
+                        {
+                            break;
+                        }
+                    }
+                    if let Ok(el) = st
+                        .wait(By::Css(
+                            "button.button-vue--vue-primary.button-vue--icon-only",
+                        ))
+                        .await
+                    {
+                        el.wait_until().clickable().await?;
+                        el.click().await?;
                     }
                     Ok(())
                 }
@@ -56,10 +72,10 @@ pub const APP: App = App {
             f: |st: &State| {
                 async {
                     st.goto("/index.php/settings/apps").await?;
-                    st.wait(By::Css(
-                        "div.section:nth-child(1) > div:nth-child(5) > button:nth-child(1)",
-                    ))
-                    .await?;
+                    st.wait(By::Css("article.app-discover-post")).await?;
+                    let _ = st
+                        .wait(By::Css(".app-item.app-discover-app app-item--store-view"))
+                        .await;
                     Ok(())
                 }
                 .boxed()
