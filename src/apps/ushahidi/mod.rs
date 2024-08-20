@@ -15,7 +15,7 @@ pub const APP: App = App {
                     st.wait(By::Id("auth")).await?.click().await?;
                     st.wait(By::Css("input[formcontrolname=email]"))
                         .await?
-                        .send_keys("admin@example.com")
+                        .send_keys(&st.pse.app_mail)
                         .await?;
                     st.wait(By::Css("input[formcontrolname=password]"))
                         .await?

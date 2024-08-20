@@ -10,7 +10,7 @@ pub const APP: App = App {
                 async {
                     st.goto("wp-login.php").await?;
                     (st.wd.find(By::Id("user_login")).await?)
-                        .send_keys("admin@example.com")
+                        .send_keys(&st.pse.app_mail)
                         .await?;
                     (st.wd.find(By::Id("user_pass")).await?)
                         .send_keys(&st.pse.app_pass)
