@@ -3,7 +3,7 @@ use futures::FutureExt;
 use thirtyfour::prelude::*;
 
 // NOTE if the name is ever changed during install, change it here as well
-pub const ADMIN_ACCOUNT_NAME: &str = "TurnKey Canvas";
+pub const ADMIN_ACCOUNT_NAME: &str = "TurnKey super admin";
 pub const APP: App = App {
     test: &[
         Step {
