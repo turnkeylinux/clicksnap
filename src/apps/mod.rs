@@ -93,6 +93,7 @@ mod tracks;
 mod typo3;
 mod ushahidi;
 mod web2py;
+mod wireguard;
 mod wordpress;
 mod xoops;
 mod yiiframework;
@@ -345,6 +346,7 @@ impl Runners {
         h.insert("ushahidi", &ushahidi::APP);
         h.insert("web2py", &web2py::APP);
         h.insert("wordpress", &wordpress::APP);
+        h.insert("wireguard", &wireguard::APP);
         h.insert("xoops", &xoops::APP);
         h.insert("yiiframework", &yiiframework::APP);
         h.insert("zencart", &zencart::APP);
