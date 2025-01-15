@@ -10,7 +10,7 @@ pub const APP: App = App {
             desc: "invoice ninja landing (special case, waiting for login)",
             f: |st: &State| {
                 async {
-                    st.wait(By::Tag("flt-glass-pane")).await?;
+                    st.wait(By::Tag("form")).await?;
                     Ok(())
                 }
                 .boxed()
@@ -22,15 +22,41 @@ pub const APP: App = App {
             desc: "invoice ninja dashboard (post login)",
             f: |st: &State| {
                 async {
-                    let root = st.wait(By::Tag("flt-glass-pane")).await?.get_shadow_root().await?;
-                    let el = root.query(By::Css("input#email")).first().await?;
-                    el.send_keys(&st.pse.app_email).await?;
-                    el.send_keys("\t").await?;
-                    let el = st.wd.active_element().await?;
-                    el.send_keys(&st.pse.app_pass).await?;
-                    el.send_keys("\n").await?;
-                    st.sleep(5000).await;
+                    let form = st.wd.form(By::Tag("form")).await?;
 
+                    form.set_by_name("email", &st.pse.app_email).await?;
+                    form.set_by_name("password", &st.pse.app_pass).await?;
+                    form.submit().await?;
+                    st.wait(By::Css("svg.cursor-pointer"))
+                        .await?
+                        .wait_until()
+                        .clickable()
+                        .await?;
+
+                    // working around invoice_ninja being difficult.
+                    //
+                    // this just removes 3 elements that obscure clicking the button to close an
+                    // overlay
+                    st.wd
+                        .handle
+                        .execute(
+                            r#"
+let el = document.getElementById("headlessui-dialog-overlay-:r7:");
+el.parentNode.removeChild(el);
+
+el = document.querySelector("div.flex.items-end.justify-center.min-h-screen.pt-4.px-4.pb-20.text-center");
+el.parentNode.removeChild(el);
+
+el = document.getElementById("headlessui-dialog-:r6:");
+el.parentNode.removeChild(el);
+                    "#, Vec::default())
+                        .await?;
+
+                    st.wait(By::Css("svg.cursor-pointer"))
+                        .await?
+                        .click()
+                        .await?;
+                    st.sleep(10_000).await;
                     Ok(())
                 }
                 .boxed()
