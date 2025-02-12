@@ -40,6 +40,17 @@ pub const APP: App = App {
             },
             ..Step::default()
         },
+        Step {
+            name: "user-edit",
+            f: |st: &State| {
+                async {
+                    st.goto("users/1/edit").await?;
+                    Ok(())
+                }
+                .boxed()
+            },
+            ..Step::default()
+        },
     ],
     ..App::default()
 };
