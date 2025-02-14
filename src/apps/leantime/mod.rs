@@ -20,25 +20,30 @@ pub const APP: App = App {
                             let form = st.wd.form(By::Css("form.onboardingModal")).await?;
                             form.set_by_name("projectname", "TurnkeyLinux Example")
                                 .await?;
-                            form.submit().await?;
-
-                            st.wait(By::Css("div.nyroModalCont")).await?;
+                            form.submit_direct().await?;
 
                             st.wd
                                 .form(By::Css("form.onboardingModal"))
                                 .await?
-                                .submit()
+                                .submit_direct()
                                 .await?;
 
-                            st.wait(By::Css("div.nyroModalCont")).await?;
+                            // sometimes this form doesn't appear either?!
+                            for _ in 0..10 {
+                                if st.wait(By::Css("form.onboardingModal")).await.is_ok() {
+                                    break;
+                                }
+                            }
 
-                            st.wd
-                                .form(By::Css("form.onboardingModal"))
-                                .await?
-                                .submit()
-                                .await?;
+                            if st.wait(By::Css("form.onboardingModal")).await.is_ok() {
+                                st.wd
+                                    .form(By::Css("form.onboardingModal"))
+                                    .await?
+                                    .submit_direct()
+                                    .await?;
+                            }
 
-                            // sometimes this modal doesn't appear either?!
+                            // this one as well?!
                             for _ in 0..10 {
                                 if st.wait(By::Css("div.nyroModalCont")).await.is_ok() {
                                     break;
@@ -51,7 +56,8 @@ pub const APP: App = App {
                                     .await?;
                             }
                         }
-
+                        st.goto("dashboard/home").await?;
+                        st.wait(By::Css("div.tw-h-full.minCalendar")).await?;
                         Ok(())
                     }
                 }
@@ -65,15 +71,18 @@ pub const APP: App = App {
                 {
                     async {
                         st.goto("dashboard/show").await?;
+
                         for _ in 0..10 {
                             if st.wait(By::Css("div.nyroModalCont")).await.is_ok() {
                                 break;
                             }
                         }
-                        st.wait(By::Css("div.nyroModalCont a.btn-primary"))
-                            .await?
-                            .click()
-                            .await?;
+                        if st.wait(By::Css("div.nyroModalCont")).await.is_ok() {
+                            st.wait(By::Css("div.nyroModalCont a.btn-primary"))
+                                .await?
+                                .click()
+                                .await?;
+                        }
 
                         Ok(())
                     }
