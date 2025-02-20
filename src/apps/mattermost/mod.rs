@@ -37,16 +37,13 @@ pub const APP: App = App {
                     inp.send_keys(&st.pse.app_pass).await?;
                     inp.send_keys("\n").await?;
 
-
                     if let Ok(org_input) = st.wait(By::Css("input.Organization__input")).await {
                         // navigating first launch config
                         org_input.send_keys("TurnkeyLinux").await?;
 
-                        let e1 = st.wait(By::Css("button.primary-button"))
-                            .await?;
+                        let e1 = st.wait(By::Css("button.primary-button")).await?;
                         e1.click().await?;
-                        let e2 = st.wait(By::Css("button.plugins-skip-btn"))
-                            .await?;
+                        let e2 = st.wait(By::Css("button.plugins-skip-btn")).await?;
                         e2.click().await?;
 
                         e1.wait_until().stale().await?;
@@ -56,10 +53,17 @@ pub const APP: App = App {
                             .click()
                             .await?;
                     }
+
                     st.wait(By::Id("channelHeaderTitle")).await?;
                     if let Ok(el) = st.wait(By::Css("div#root > button")).await {
                         el.click().await?;
                     }
+
+                    st.wait(By::XPath("//span[contains(.,'No thanks, ')]"))
+                        .await?
+                        .click()
+                        .await?;
+
                     Ok(())
                 }
                 .boxed()
