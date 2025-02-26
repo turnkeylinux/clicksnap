@@ -37,6 +37,9 @@ pub const APP: App = App {
             f: |st: &State| {
                 async {
                     st.goto("wp-admin/post-new.php").await?;
+                    st.wait(By::Tag("iframe")).await?.enter_frame().await?;
+                    st.wait(By::XPath("//span[@data-rich-text-placeholder='Add title']"))
+                        .await?;
                     Ok(())
                 }
                 .boxed()
