@@ -27,11 +27,11 @@ pub const APP: App = App {
             name: "dashboard",
             f: |st: &State| {
                 async {
-                    st.wait(By::XPath("//button[text() = 'Sign In']"))
+                    st.wait(By::Css("button[aria-label='Sign In']"))
                         .await?
                         .click()
                         .await?;
-                    st.wait(By::XPath("//h1[text() = 'Dashboard']")).await?;
+                    st.wait(By::Id("34_chart")).await?;
                     Ok(())
                 }
                 .boxed()
