@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+time = "0.3.41"
 thirtyfour = "0.32.0-rc.8"
 color-eyre = "0.6"
 tokio = { version = "1", features = ["full"] }
